@@ -576,3 +576,55 @@ html.motion-ready .reveal.is-visible{filter:none!important;transform:translateY(
   #postGrid>.post-card,.bottom-dock .dock-liquid-indicator{transition:none!important}
   .bottom-dock.is-dragging .dock-liquid-indicator{filter:none}
 }
+
+
+/* Editorial art direction: calm typography, one glass object, no decorative galaxy layers. */
+.editorial-art{padding:17px!important;border-radius:28px!important;background:rgba(255,255,255,.54)!important;border:1px solid rgba(255,255,255,.8)!important;box-shadow:0 24px 70px rgba(40,46,60,.08),inset 0 1px 0 rgba(255,255,255,.88)!important;backdrop-filter:blur(26px) saturate(145%)!important;-webkit-backdrop-filter:blur(26px) saturate(145%)!important}
+.editorial-art .art-label,.editorial-art .art-footer{color:#777984!important;letter-spacing:.09em}
+.editorial-art .art-status{display:flex;align-items:center;gap:7px}
+.editorial-art .art-status i{width:6px;height:6px;border-radius:50%;background:#30b875;box-shadow:0 0 0 3px rgba(48,184,117,.12)}
+.editorial-scene{position:relative;min-height:370px;overflow:hidden;border-radius:19px;background:linear-gradient(145deg,#f7f8fb 0%,#e7eaf1 46%,#d8dce7 100%);isolation:isolate}
+.editorial-scene:before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 72% 25%,rgba(255,255,255,.92),transparent 31%),radial-gradient(ellipse at 20% 85%,rgba(160,177,218,.23),transparent 45%);pointer-events:none}
+.editorial-scene:after{content:"";position:absolute;inset:0;z-index:4;border:1px solid rgba(255,255,255,.65);border-radius:inherit;pointer-events:none}
+.scene-orb{position:absolute;width:clamp(180px,25vw,260px);aspect-ratio:1;right:5%;top:10%;border-radius:50%;background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.98) 0 4%,rgba(255,255,255,.74) 10%,rgba(216,222,238,.78) 28%,rgba(174,185,210,.7) 54%,rgba(238,240,247,.92) 73%,rgba(255,255,255,.9) 100%);box-shadow:inset -18px -20px 45px rgba(100,112,145,.12),inset 12px 14px 34px rgba(255,255,255,.9),0 28px 58px rgba(79,92,125,.16);z-index:1}
+.scene-halo{position:absolute;right:-12%;top:4%;width:75%;aspect-ratio:1;border:1px solid rgba(255,255,255,.75);border-radius:50%;box-shadow:0 0 0 18px rgba(255,255,255,.13),0 0 0 42px rgba(255,255,255,.08);z-index:0}
+.scene-copy{position:absolute;z-index:2;left:clamp(23px,3vw,37px);top:clamp(32px,4vw,49px);display:flex;flex-direction:column;align-items:flex-start}
+.scene-index{font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.13em;color:#72798a}
+.scene-copy strong{margin-top:27px;font-size:clamp(30px,3.3vw,43px);font-weight:560;line-height:1.05;letter-spacing:-.065em;color:#20232c}
+.scene-copy strong em{font-style:normal;color:#737c94}
+.scene-caption{margin-top:18px;font-size:9px;letter-spacing:.11em;color:#73798a}
+.scene-glass-chip{position:absolute;z-index:3;left:clamp(18px,2.5vw,29px);bottom:24px;display:flex;align-items:center;gap:9px;padding:11px 14px;border:1px solid rgba(255,255,255,.78);border-radius:999px;background:rgba(255,255,255,.46);box-shadow:0 8px 24px rgba(69,77,100,.07),inset 0 1px 0 rgba(255,255,255,.8);color:#555d70;font-size:11px;backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%)}
+.chip-dot{width:7px;height:7px;border-radius:50%;background:#8a9bc7;box-shadow:0 0 0 4px rgba(138,155,199,.13)}
+.scene-coordinate{position:absolute;right:22px;bottom:23px;font:9px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;text-align:right;letter-spacing:.1em;color:#7c8395}
+body.dark .editorial-art{background:rgba(35,36,41,.65)!important;border-color:rgba(255,255,255,.12)!important;box-shadow:0 24px 70px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.08)!important}
+body.dark .editorial-art .art-label,body.dark .editorial-art .art-footer{color:#a1a1aa!important}
+body.dark .editorial-scene{background:linear-gradient(145deg,#33363f 0%,#252832 48%,#1c1f27 100%)}
+body.dark .editorial-scene:before{background:radial-gradient(ellipse at 72% 25%,rgba(255,255,255,.1),transparent 31%),radial-gradient(ellipse at 20% 85%,rgba(104,124,173,.17),transparent 45%)}
+body.dark .editorial-scene:after{border-color:rgba(255,255,255,.09)}
+body.dark .scene-orb{background:radial-gradient(circle at 32% 25%,rgba(255,255,255,.85) 0 4%,rgba(211,217,233,.7) 10%,rgba(123,134,160,.65) 36%,rgba(56,62,79,.92) 73%,rgba(211,215,228,.62) 100%);box-shadow:inset -18px -20px 45px rgba(0,0,0,.22),inset 12px 14px 34px rgba(255,255,255,.35),0 28px 58px rgba(0,0,0,.22)}
+body.dark .scene-halo{border-color:rgba(255,255,255,.13);box-shadow:0 0 0 18px rgba(255,255,255,.025),0 0 0 42px rgba(255,255,255,.018)}
+body.dark .scene-copy strong{color:#f5f5f7}
+body.dark .scene-copy strong em,body.dark .scene-index,body.dark .scene-caption,body.dark .scene-coordinate{color:#a5adbf}
+body.dark .scene-glass-chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.13);color:#d5d8e1;box-shadow:0 8px 24px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.1)}
+/* Drag state is short-lived; avoid continuous SVG filter animation and avoid layout writes on every move. */
+.bottom-dock{touch-action:pan-y}
+.bottom-dock.is-dragging{touch-action:none}
+.bottom-dock.is-dragging .dock-liquid-indicator{filter:url(#liquid-warp);transition:none!important;box-shadow:0 9px 24px rgba(58,74,110,.18),inset 0 1px 0 rgba(255,255,255,.8)}
+.bottom-dock.is-dragging .dock-liquid-indicator:before{opacity:1;transform:scaleX(1.02)}
+.bottom-dock .dock-liquid-indicator{transform-origin:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+@media(max-width:760px){
+  .editorial-art{padding:11px!important;border-radius:23px!important}
+  .editorial-scene{min-height:320px}
+  .scene-orb{width:190px;right:-2%;top:9%}
+  .scene-copy{left:23px;top:32px}
+  .scene-copy strong{font-size:33px}
+  .scene-glass-chip{bottom:18px;left:17px;font-size:10px}
+  .scene-coordinate{right:16px;bottom:18px}
+}
+@media(max-width:390px){
+  .editorial-scene{min-height:292px}
+  .scene-orb{width:165px;right:-4%}
+  .scene-copy strong{font-size:30px}
+  .scene-caption{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.bottom-dock.is-dragging .dock-liquid-indicator{filter:none}}
