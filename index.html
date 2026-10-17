@@ -194,6 +194,109 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
 }
+
+/* Refined corner system: native-app continuous corners where supported. */
+@supports (corner-shape: squircle) {
+ .banner,.welcome,.contact-card,.qr-frame,.dialog,.logo,.entry-icon,.welcome-symbol,.contact-symbol {
+   corner-shape:squircle;
+ }
+ .banner{border-radius:29px}
+ .welcome{border-radius:24px}
+ .contact-card{border-radius:24px}
+ .qr-frame{border-radius:15px}
+ .logo{border-radius:14px}
+ .entry-icon{border-radius:17px}
+ .welcome-symbol{border-radius:15px}
+ .contact-symbol{border-radius:9px}
+ .dialog{border-radius:26px}
+}
+/* The header is intentionally one clean row of five circular controls. */
+.header-actions{gap:4px;flex-wrap:nowrap;align-items:center}
+.header-actions .round-button{flex:0 0 30px;border-radius:50%;overflow:hidden}
+.header-actions .round-button::before,.header-actions .round-button::after{display:none!important}
+.header-actions .round-button svg{position:relative;z-index:1;pointer-events:none}
+.header-actions .round-button[hidden]{display:none!important}
+@media(max-width:370px){
+ .app{padding-left:11px;padding-right:11px}
+ .header{gap:5px}
+ .brand{gap:6px}
+ .brand-name{font-size:12px;letter-spacing:-.045em}
+ .brand-sub{display:none}
+ .logo{width:31px;height:31px;border-radius:11px}
+ .header-actions{gap:2px}
+ .header-actions .round-button{flex-basis:27px;width:27px;height:27px;min-width:27px}
+ .header-actions .round-button svg{width:13px;height:13px}
+}
+/* Fallback uses a conventional pill only if local SVG clipping is unavailable. */
+.bottom-nav{
+ border-radius:999px;
+}
+.bottom-nav .tab{border-radius:18px}
+.nav-frame{display:none;pointer-events:none}
+.bottom-nav-wrap{filter:none}
+.bottom-nav.glass::before{
+ opacity:.18;
+ border-radius:inherit;
+}
+.bottom-nav.glass::after{border-radius:inherit}
+/* Supported browsers use true cubic-Bezier outlines, not a border-radius approximation. */
+@supports (clip-path:url(#bottomNavBezierClip)) {
+ .bottom-nav.glass{
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  overflow:visible!important;isolation:isolate;
+ }
+ .bottom-nav.glass::before{
+  inset:0;z-index:0;border-radius:0;opacity:1;mix-blend-mode:normal;
+  clip-path:url(#bottomNavBezierClip);
+  background-color:rgba(249,251,255,var(--glass-strong-alpha));
+  background-image:linear-gradient(132deg,rgba(255,255,255,.51),rgba(255,255,255,.08) 40%,rgba(141,182,255,.04)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+  background-size:100% 100%,128px 128px;
+  background-blend-mode:normal,soft-light;
+  -webkit-backdrop-filter:blur(27px) saturate(165%);
+  backdrop-filter:blur(27px) saturate(165%);
+  box-shadow:none;
+ }
+ html[data-theme="dark"] .bottom-nav.glass::before{
+  background-color:rgba(38,45,58,var(--glass-strong-alpha));
+  background-image:linear-gradient(132deg,rgba(255,255,255,.14),rgba(255,255,255,.025) 43%,rgba(141,182,255,.04)),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+ }
+ .bottom-nav.glass::after{
+  inset:0;z-index:0;border-radius:0;clip-path:url(#bottomNavBezierClip);
+  background:linear-gradient(132deg,rgba(255,255,255,.25),transparent 38%,rgba(125,169,255,.035));
+  box-shadow:none;
+ }
+ html[data-theme="dark"] .bottom-nav.glass::after{
+  background:linear-gradient(132deg,rgba(255,255,255,.08),transparent 42%,rgba(125,169,255,.035));
+ }
+ .nav-frame{
+  display:block;position:absolute;inset:0;width:100%;height:100%;z-index:1;overflow:visible;
+ }
+ .nav-frame path{fill:none;stroke:var(--stroke);stroke-width:1;vector-effect:non-scaling-stroke}
+ .bottom-nav .tab{
+  isolation:isolate;z-index:2;border:1px solid transparent;border-radius:0;background:transparent;box-shadow:none;
+ }
+ .bottom-nav .tab[aria-current="page"]{
+  background:transparent;border-color:transparent;box-shadow:none;
+ }
+ .bottom-nav .tab[aria-current="page"]::before{
+  content:"";position:absolute;z-index:0;inset:1px;display:block;
+  clip-path:url(#tabBezierClip);
+  background:linear-gradient(145deg,rgba(151,192,255,.24),rgba(121,172,255,.14));
+  box-shadow:inset 0 0 0 1px rgba(112,161,239,.2),inset 0 1px 0 rgba(255,255,255,.4);
+  border-radius:0;pointer-events:none;
+ }
+ .bottom-nav .tab[aria-current="page"]::after{display:none}
+ .bottom-nav .tab svg,.bottom-nav .tab span{position:relative;z-index:1}
+ .bottom-nav .tab[aria-current="page"]{color:var(--accent-strong)}
+ .bottom-nav-wrap{filter:drop-shadow(0 13px 17px rgba(43,62,97,.13)) drop-shadow(0 2px 4px rgba(43,62,97,.055))}
+ html[data-theme="dark"] .bottom-nav-wrap{filter:drop-shadow(0 13px 17px rgba(0,0,0,.24)) drop-shadow(0 2px 4px rgba(0,0,0,.13))}
+}
+@media(max-width:370px){
+ .bottom-nav{min-height:61px;padding:5px}
+ .bottom-nav .tab{min-height:48px}
+}
+
 </style>
 </head>
 <body>
@@ -274,10 +377,21 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
   </section>
  </main>
 </div>
+<svg class="shape-definitions" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+ <defs>
+  <clipPath id="bottomNavBezierClip" clipPathUnits="objectBoundingBox">
+   <path d="M .095 .015 C .042 .015 .006 .22 .006 .5 C .006 .78 .042 .985 .095 .985 L .905 .985 C .958 .985 .994 .78 .994 .5 C .994 .22 .958 .015 .905 .015 Z"/>
+  </clipPath>
+  <clipPath id="tabBezierClip" clipPathUnits="objectBoundingBox">
+   <path d="M .22 .035 C .115 .035 .05 .12 .05 .25 C .05 .34 .018 .41 .018 .5 C .018 .59 .05 .66 .05 .75 C .05 .88 .115 .965 .22 .965 L .78 .965 C .885 .965 .95 .88 .95 .75 C .95 .66 .982 .59 .982 .5 C .982 .41 .95 .34 .95 .25 C .95 .12 .885 .035 .78 .035 Z"/>
+  </clipPath>
+ </defs>
+</svg>
 <nav class="bottom-nav-wrap" aria-label="底部导航">
  <div class="bottom-nav glass" id="bottomNav">
-  <a class="tab" href="#home" data-tab="home" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5.5 9v11h13V9M9.5 20v-7h5v7"/></svg><span>首页</span></a>
-  <a class="tab" href="#shortcut-grid" data-tab="resources"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg><span>资源</span></a>
+  <svg class="nav-frame" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d="M .095 .015 C .042 .015 .006 .22 .006 .5 C .006 .78 .042 .985 .095 .985 L .905 .985 C .958 .985 .994 .78 .994 .5 C .994 .22 .958 .015 .905 .015 Z" vector-effect="non-scaling-stroke"/></svg>
+  <a class="tab" href="#home" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5.5 9v11h13V9M9.5 20v-7h5v7"/></svg><span>首页</span></a>
+  <a class="tab" href="#shortcut-grid" data-tab="resources" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg><span>资源</span></a>
   <a class="tab" href="#contact" data-tab="more"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/></svg><span>更多</span></a>
   <a class="tab" href="#welcome-card" data-tab="me"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg><span>我的</span></a>
  </div>
