@@ -588,7 +588,7 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 .about-body h1 { font-size: 1.6rem; font-weight: 900; margin: 12px 0 4px; }
 .about-body .tagline { color: var(--indigo); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; }
 .about-divider { border-top: 1px solid var(--divider); margin: 20px 0; padding-top: 20px; }
-.qr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 600px; }
+.qr-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin: 0 auto; max-width: 640px; }
 .qr-box { text-align: center; padding: 16px; border-radius: var(--radius-md); background: rgba(255,255,255,0.2); }
 [data-theme="dark"] .qr-box { background: rgba(255,255,255,0.06); }
 .qr-box .ph {
