@@ -312,6 +312,15 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
   if(themeMeta)themeMeta.setAttribute("content",dark?"#191e27":"#eef2f7");
  }
  syncTheme();
+ var initialGlass=72;
+ try{initialGlass=Number(localStorage.getItem("elves-home-glass")||72)}catch(e){}
+ (function(){
+  var value=Math.max(20,Math.min(90,initialGlass||72));
+  var t=(value-20)/70;
+  root.style.setProperty("--glass-alpha",(0.23+t*0.31).toFixed(3));
+  root.style.setProperty("--glass-strong-alpha",(0.38+t*0.29).toFixed(3));
+  root.style.setProperty("--glass-blur",(12+t*12).toFixed(1)+"px");
+ })();
  themeButton.addEventListener("click",function(){
   var dark=root.getAttribute("data-theme")!=="dark";
   root.setAttribute("data-theme",dark?"dark":"light");
@@ -347,6 +356,7 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
   }
  });
  document.getElementById("searchBtn").addEventListener("click",function(){
+  document.querySelectorAll(".entry").forEach(function(item){item.hidden=false});
   openDialog("搜索快捷入口",'<input class="search-input" id="entrySearch" type="search" placeholder="搜索学院、资源、图廊…" aria-label="搜索入口"><p class="dialog-copy" style="margin-top:10px">输入名称后，首页宫格会即时筛选匹配入口。</p>');
   var input=document.getElementById("entrySearch");
   input.addEventListener("input",function(){
