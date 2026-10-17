@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    ELVES31y的小屋 — 全局样式
    设计规范参考自 Kirameku（MIT License），用原生 CSS 重写。
    淡蓝紫柔和色系 · 毛玻璃卡片 · 大圆角 · 柔和阴影
@@ -580,7 +580,7 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 .about-cover .mask { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent); }
 .about-body { padding: 0 24px 32px; }
 .about-avatar {
-  width: 96px; height: 96px; border-radius: 50%; border: 4px solid #fff; margin-top: -48px; position: relative; z-index: 2;
+  width: 96px; height: 96px; border-radius: 50%; border: 4px solid #fff; margin: -48px auto 0; position: relative; z-index: 2;
   box-shadow: var(--shadow-lg); overflow: hidden; background: #fff;
 }
 [data-theme="dark"] .about-avatar { border-color: #0f172a; }
@@ -588,7 +588,7 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 .about-body h1 { font-size: 1.6rem; font-weight: 900; margin: 12px 0 4px; }
 .about-body .tagline { color: var(--indigo); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; }
 .about-divider { border-top: 1px solid var(--divider); margin: 20px 0; padding-top: 20px; }
-.qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 480px; }
+.qr-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; max-width: 600px; }
 .qr-box { text-align: center; padding: 16px; border-radius: var(--radius-md); background: rgba(255,255,255,0.2); }
 [data-theme="dark"] .qr-box { background: rgba(255,255,255,0.06); }
 .qr-box .ph {
