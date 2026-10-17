@@ -43,7 +43,7 @@ html.dark .liquid-glass-tint,body.dark .liquid-glass-tint{
   background:rgba(26,27,32,var(--glass-tint-dark,.24));
 }
 html:not(.dark) .liquid-glass-shine{
-  --lg-rim-lit:calc(var(--glass-rim-alpha,.58) * .56);
+  --lg-rim-lit:var(--glass-rim-light,.32);
   --lg-rim-dark:.12;
   box-shadow:inset 0 13px 14px -13px rgba(255,255,255,.66),inset 0 -10px 12px -12px rgba(255,255,255,.48);
 }
@@ -56,7 +56,7 @@ html.dark .liquid-glass-shine,body.dark .liquid-glass-shine{
    remains untouched and text is never displaced or filtered. */
 .liquid-glass-shine::after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow:inset 1px 0 rgba(129,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,158,201,calc(var(--glass-chroma-alpha,.15) * .72));
+  box-shadow:inset 1px 0 rgba(129,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,158,201,var(--glass-chroma-pink,.108));
   opacity:.78;
 }
 html.is-safari .liquid-glass-effect{
