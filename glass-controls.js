@@ -32,7 +32,9 @@
     root.style.setProperty('--glass-tint-dark', darkTint.toFixed(3));
     root.style.setProperty('--glass-blur', blur.toFixed(1) + 'px');
     root.style.setProperty('--glass-rim-alpha', rim.toFixed(3));
+    root.style.setProperty('--glass-rim-light', (rim * .56).toFixed(3));
     root.style.setProperty('--glass-chroma-alpha', chroma.toFixed(3));
+    root.style.setProperty('--glass-chroma-pink', (chroma * .72).toFixed(3));
     if (range && Number(range.value) !== value) range.value = String(value);
     if (output) output.value = value + '%';
     if (range) range.setAttribute('aria-valuetext', value + '% 通透度');
