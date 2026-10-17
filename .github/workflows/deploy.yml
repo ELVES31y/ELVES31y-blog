@@ -1,0 +1,17 @@
+﻿name: deploy
+# 推送 main 分支 → GitHub 云端自动跑 wrangler 部署到 Cloudflare Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: d6f0fdf7013107b34c2b79a9930a1b3c
+          command: pages deploy public --project-name=elves31y-blog

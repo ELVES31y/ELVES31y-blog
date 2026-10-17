@@ -1,4 +1,4 @@
-import { json, err, requireAuth } from "../../../_lib.js";
+import { json, err, requireAuth } from "../../_lib.js";
 
 // POST /api/admin/upload   (multipart/form-data，字段名 file)
 // 把图片传到 R2，返回公开访问地址

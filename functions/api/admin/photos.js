@@ -1,4 +1,4 @@
-import { json, err, readJson, requireAuth, toInt } from "../../../_lib.js";
+import { json, err, readJson, requireAuth, toInt } from "../../_lib.js";
 
 // GET  /api/admin/photos?page=&size=
 // POST /api/admin/photos   新增照片（body: url, caption, orientation）

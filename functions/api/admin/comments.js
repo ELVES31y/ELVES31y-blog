@@ -1,4 +1,4 @@
-import { json, requireAuth, toInt } from "../../../_lib.js";
+import { json, requireAuth, toInt } from "../../_lib.js";
 
 // GET /api/admin/comments?post_id=&status=&page=&size=
 // 说明：评论列表接口（管理端），用于「评论管理」页。

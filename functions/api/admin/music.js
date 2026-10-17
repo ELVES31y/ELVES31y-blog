@@ -1,4 +1,4 @@
-import { json, err, readJson, requireAuth } from "../../../_lib.js";
+import { json, err, readJson, requireAuth } from "../../_lib.js";
 
 // GET  /api/admin/music   全部歌曲
 // POST /api/admin/music   新增歌曲

@@ -1,4 +1,4 @@
-import { json, err, readJson, requireAuth, toInt, now } from "../../../_lib.js";
+import { json, err, readJson, requireAuth, toInt, now } from "../../_lib.js";
 
 // GET  /api/admin/moments?page=&size=
 // POST /api/admin/moments   新建说说

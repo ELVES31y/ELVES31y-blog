@@ -1,4 +1,4 @@
-import { json, err, readJson, requireAuth, attachTags, saveTags, slugify, toInt, now } from "../../../_lib.js";
+import { json, err, readJson, requireAuth, attachTags, saveTags, slugify, toInt, now } from "../../_lib.js";
 
 // GET  /api/admin/posts?q=&status=&page=&size=   全部文章（含草稿）
 // POST /api/admin/posts   新建文章
