@@ -72,6 +72,100 @@
       const link = controls.find(el => el.matches('a[data-dock-link]') && el.getAttribute('href') === (location.hash || '#home'));
       moveLens(link || activeControl);
     });
+    /* Direct manipulation: the lens follows the pointer and settles on the nearest
+       destination. Pointer capture prevents losing the gesture at the dock edge. */
+    let drag = null;
+    let dragFrame = 0;
+    let pendingX = 0;
+    let suppressClickUntil = 0;
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+    const centerOf = element => {
+      const r = element.getBoundingClientRect();
+      return r.left + r.width / 2;
+    };
+    const nearestControl = viewportX => controls.reduce((best, item) =>
+      Math.abs(centerOf(item) - viewportX) < Math.abs(centerOf(best) - viewportX) ? item : best
+    , controls[0]);
+    const renderDrag = () => {
+      dragFrame = 0;
+      if (!drag || !lens) return;
+      const dockRect = dock.getBoundingClientRect();
+      const lensWidth = drag.baseWidth;
+      const x = clamp(pendingX - dockRect.left - lensWidth / 2, 4, dock.clientWidth - lensWidth - 4);
+      const stretch = clamp(1 + Math.abs(drag.velocity) / 2600, 1, 1.075);
+      lens.style.width = lensWidth + 'px';
+      lens.style.transform = 'translate3d(' + x + 'px,0,0) scaleX(' + stretch.toFixed(3) + ')';
+      lens.style.setProperty('--lens-x', clamp(pendingX - dockRect.left - x, 8, lensWidth - 8) + 'px');
+    };
+    dock.addEventListener('pointerdown', event => {
+      if (event.button !== undefined && event.button !== 0) return;
+      const control = event.target.closest('a[data-dock-link],button[data-dock-action]');
+      if (!control && !event.target.closest('.dock-liquid-indicator')) return;
+      const rect = lens.getBoundingClientRect();
+      drag = { pointerId:event.pointerId, startX:event.clientX, lastX:event.clientX, startY:event.clientY,
+        lastTime:performance.now(), velocity:0, moved:false,
+        startControl:control || activeControl, baseWidth:rect.width || (control || activeControl).getBoundingClientRect().width };
+      pendingX = event.clientX;
+      try { dock.setPointerCapture(event.pointerId); } catch (_) {}
+    });
+    dock.addEventListener('pointermove', event => {
+      if (!drag || drag.pointerId !== event.pointerId) return;
+      const now = performance.now();
+      drag.velocity = (event.clientX - drag.lastX) / Math.max(1, now - drag.lastTime) * 1000;
+      drag.lastX = event.clientX;
+      drag.lastTime = now;
+      if (!drag.moved && Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 6) {
+        drag.moved = true;
+        dock.classList.add('is-dragging');
+        controls.forEach(item => item.style.pointerEvents = 'none');
+      }
+      if (!drag.moved) return;
+      pendingX = event.clientX;
+      if (!dragFrame) dragFrame = requestAnimationFrame(renderDrag);
+      if (event.cancelable) event.preventDefault();
+    }, { passive:false });
+    const finishDrag = (event, cancelled = false) => {
+      if (!drag || (event && event.pointerId !== drag.pointerId)) return;
+      const state = drag;
+      drag = null;
+      if (dragFrame) cancelAnimationFrame(dragFrame);
+      dragFrame = 0;
+      if (!state.moved || cancelled) {
+        dock.classList.remove('is-dragging');
+        controls.forEach(item => item.style.pointerEvents = '');
+        if (lens) lens.style.transform = 'translate3d(' + currentTargetX + 'px,0,0) scaleX(1)';
+        return;
+      }
+      suppressClickUntil = performance.now() + 450;
+      const destination = nearestControl(event && Number.isFinite(event.clientX) ? event.clientX : state.lastX);
+      controls.forEach(item => item.style.pointerEvents = '');
+      dock.classList.remove('is-dragging');
+      if (destination.matches('a[data-dock-link]')) {
+        currentSectionControl = destination;
+        placeLens(destination);
+        const href = destination.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          history.replaceState(null, '', href);
+          document.querySelector(href)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block:'start' });
+        }
+      } else {
+        placeLens(destination);
+        if (destination.dataset.dockAction === 'search') $('#searchBtn')?.click();
+        if (destination.dataset.dockAction === 'categories') $('#posts')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block:'start' });
+      }
+    };
+    dock.addEventListener('pointerup', event => finishDrag(event));
+    dock.addEventListener('pointercancel', event => finishDrag(event, true));
+    dock.addEventListener('lostpointercapture', event => {
+      if (drag && drag.pointerId === event.pointerId) finishDrag(event, true);
+    });
+    dock.addEventListener('click', event => {
+      if (performance.now() < suppressClickUntil) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    }, true);
+
     window.addEventListener('hashchange', selectSection);
     if ('IntersectionObserver' in window) {
       const sectionLinks = [
