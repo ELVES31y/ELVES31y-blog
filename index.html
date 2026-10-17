@@ -407,6 +407,85 @@ html[data-theme="dark"] .nav-lens .lens-tint{
  .entry-arrow{font-size:9px}
 }
 
+
+/* Responsive device layouts: compact touch-first UI below 900px, roomy desktop grid above it. */
+.device-info{
+ margin-top:20px;padding:13px 14px;border:1px solid var(--stroke-soft);border-radius:16px;
+ background:rgba(255,255,255,.24);display:flex;align-items:center;justify-content:space-between;gap:12px;
+}
+html[data-theme="dark"] .device-info{background:rgba(255,255,255,.035)}
+.device-info-copy,.device-info-meta{display:flex;flex-direction:column;gap:4px;min-width:0}
+.device-info-label{font-size:10px;color:var(--faint);letter-spacing:.04em}
+.device-info-copy strong{font-size:13px;font-weight:730;color:var(--ink)}
+.device-info-meta{align-items:flex-end;text-align:right;color:var(--muted);font-size:10px;line-height:1.5}
+@media(min-width:600px) and (max-width:899px){
+ .app{width:min(100%,820px);padding-left:22px;padding-right:22px}
+ .bottom-nav{width:min(100%,420px)}
+ .banner{min-height:216px;padding:27px 28px}
+ .banner h1{font-size:36px}
+ .banner-orb-wrap{right:28px;top:30px;width:160px;height:160px}
+ .banner-orb{width:112px;height:112px;font-size:45px}
+ .welcome h2{font-size:17px}
+ .welcome p{font-size:12px}
+ .contact-grid{gap:14px}
+}
+@media(min-width:900px){
+ .app{width:min(100%,1180px);padding:22px 34px calc(132px + env(safe-area-inset-bottom,0))}
+ .statusbar{height:32px;padding:0 7px;font-size:13px}
+ .header{margin-top:8px;min-height:58px;margin-bottom:5px;gap:18px}
+ .brand{gap:12px}
+ .logo{width:44px;height:44px;border-radius:16px;font-size:20px}
+ .brand-name{font-size:17px;letter-spacing:-.04em}
+ .header-actions{gap:8px}
+ .header-actions .round-button{flex:0 0 38px;width:38px;height:38px;min-width:38px}
+ .header-actions .round-button svg{width:18px;height:18px}
+ main{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:20px;align-items:stretch}
+ .banner{grid-column:1/-1;min-height:270px;margin-top:20px;padding:35px 40px;border-radius:34px}
+ .banner-copy{width:min(68%,680px)}
+ .banner-kicker{font-size:10px}
+ .banner h1{max-width:620px;font-size:clamp(38px,4.1vw,48px);line-height:1.13;margin:26px 0 10px}
+ .banner-sub{font-size:13px}
+ .banner-orb-wrap{right:10%;top:26px;width:210px;height:210px}
+ .banner-orb{width:145px;height:145px;font-size:58px}
+ .banner-foot{left:40px;right:40px;bottom:17px;font-size:10px}
+ .welcome{grid-column:span 7;margin-top:0;min-height:188px;padding:27px 28px;align-items:center;gap:18px;border-radius:28px}
+ .welcome-symbol{width:53px;height:53px;border-radius:18px;font-size:22px}
+ .welcome-eyebrow{font-size:10px}
+ .welcome h2{font-size:20px;margin:7px 0}
+ .welcome p{font-size:12.5px;line-height:1.85;max-width:540px}
+ .section{margin-top:0}
+ #shortcut-grid{grid-column:span 5;padding:22px;border:1px solid var(--stroke-soft);border-radius:28px;background:rgba(255,255,255,.22)}
+ html[data-theme="dark"] #shortcut-grid{background:rgba(255,255,255,.025)}
+ .section-heading{margin:0 1px 15px}
+ .section-heading h2{font-size:20px}
+ .section-meta{font-size:9px}
+ .entry-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+ .entry{min-height:76px;padding:11px 9px;gap:8px;border-radius:18px}
+ .entry-icon{width:35px;height:35px;flex-basis:35px;border-radius:12px}
+ .entry-icon svg{width:19px;height:19px}
+ .entry-label{font-size:12px}
+ .entry-arrow{font-size:12px}
+ #contact{grid-column:1/-1;margin-top:1px}
+ .contact-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+ .contact-card{min-height:142px;padding:18px 22px;display:grid;grid-template-columns:minmax(0,1fr) 110px;grid-template-rows:auto auto;align-content:center;align-items:center;justify-items:stretch;column-gap:18px;border-radius:25px;text-align:left}
+ .contact-heading{grid-column:1;grid-row:1;justify-content:flex-start;align-self:end;font-size:14px}
+ .qr-frame{grid-column:2;grid-row:1/3;width:110px;max-width:100%;margin:0;justify-self:end}
+ .qr-note{grid-column:1;grid-row:2;justify-self:start;align-self:start;padding-top:7px;font-size:10px}
+ .bottom-nav-wrap{bottom:calc(16px + env(safe-area-inset-bottom,0));padding:0 24px}
+ .bottom-nav{width:min(100%,520px);min-height:76px;padding:7px;gap:6px}
+ .bottom-nav .tab{min-height:58px;font-size:13px}
+ .nav-lens{top:7px;bottom:7px}
+}
+@media(min-width:1280px){
+ .app{width:min(100%,1240px)}
+ .banner{min-height:292px}
+ .banner-orb-wrap{right:12%;width:224px;height:224px}
+ .banner-orb{width:156px;height:156px}
+}
+@media(max-width:899px){
+ main{display:block}
+}
+
 </style>
 </head>
 <body>
@@ -515,6 +594,35 @@ html[data-theme="dark"] .nav-lens .lens-tint{
  var closeButton=document.getElementById("dialogClose");
  var reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+ var coarsePointerQuery=window.matchMedia("(pointer: coarse)");
+ var hoverQuery=window.matchMedia("(hover: hover)");
+ function syncDeviceReadout(){
+  var type=root.getAttribute("data-device")||"mobile";
+  var typeLabels={desktop:"电脑端",tablet:"平板端",mobile:"手机端"};
+  var modeLabels={touch:"触控输入",pointer:"鼠标 / 触控板"};
+  var typeNode=document.getElementById("deviceTypeValue");
+  var inputNode=document.getElementById("deviceInputValue");
+  var viewportNode=document.getElementById("deviceViewport");
+  if(typeNode)typeNode.textContent=typeLabels[type]||"自适配设备";
+  if(inputNode)inputNode.textContent=modeLabels[root.getAttribute("data-input-mode")]||"自动适配";
+  if(viewportNode)viewportNode.textContent=Math.round(window.innerWidth)+" × "+Math.round(window.innerHeight)+" px";
+ }
+ function detectDevice(){
+  var width=window.innerWidth||document.documentElement.clientWidth||0;
+  var ua=window.navigator.userAgent||"";
+  var touchMac=window.navigator.platform==="MacIntel"&&window.navigator.maxTouchPoints>1;
+  var phoneUA=/iPhone|iPod|Windows Phone|IEMobile|BlackBerry|Android.*Mobile|Mobile.*Android/i.test(ua);
+  var tabletUA=/iPad|Tablet|PlayBook|Silk/i.test(ua)||(/Android/i.test(ua)&&!/Mobile/i.test(ua))||touchMac;
+  var type=phoneUA?"mobile":tabletUA?"tablet":width>=900?"desktop":width>=600?"tablet":"mobile";
+  root.setAttribute("data-device",type);
+  root.setAttribute("data-input-mode",coarsePointerQuery.matches?"touch":"pointer");
+  syncDeviceReadout();
+ }
+ detectDevice();
+ if(typeof coarsePointerQuery.addEventListener==="function")coarsePointerQuery.addEventListener("change",detectDevice);
+ else if(typeof coarsePointerQuery.addListener==="function")coarsePointerQuery.addListener(detectDevice);
+
+
  try{
   var savedTheme=localStorage.getItem("elves-home-theme");
   if(savedTheme==="dark")root.setAttribute("data-theme","dark");
@@ -555,7 +663,7 @@ html[data-theme="dark"] .nav-lens .lens-tint{
  dialog.addEventListener("click",function(event){if(event.target===dialog)closeDialog()});
 
  document.getElementById("settingsBtn").addEventListener("click",function(){
-  openDialog("玻璃外观",'<p class="dialog-copy" style="margin-bottom:18px">轻微调整面板通透程度，文字始终保持清晰。</p><div class="settings-line"><label for="glassRange">玻璃通透度</label><output id="glassOutput">72%</output></div><input class="transparency-range" id="glassRange" type="range" min="20" max="90" step="1" value="72" aria-label="玻璃通透度"><div class="range-labels"><span>柔和磨砂</span><span>高通透</span></div>');
+  openDialog("玻璃外观",'<p class="dialog-copy" style="margin-bottom:18px">轻微调整面板通透程度，文字始终保持清晰。</p><div class="settings-line"><label for="glassRange">玻璃通透度</label><output id="glassOutput">72%</output></div><input class="transparency-range" id="glassRange" type="range" min="20" max="90" step="1" value="72" aria-label="玻璃通透度"><div class="range-labels"><span>柔和磨砂</span><span>高通透</span></div><div class="device-info" aria-live="polite"><div class="device-info-copy"><span class="device-info-label">当前设备</span><strong id="deviceTypeValue">自动识别中</strong></div><div class="device-info-meta"><span id="deviceInputValue">自动适配</span><span id="deviceViewport"></span></div></div>');
   var range=document.getElementById("glassRange");
   var output=document.getElementById("glassOutput");
   var saved=72;
@@ -684,7 +792,9 @@ html[data-theme="dark"] .nav-lens .lens-tint{
    placeNavLens(item);
   });
  });
- window.addEventListener("resize",function(){placeNavLens(selectedNavItem);});
+ window.addEventListener("resize",function(){detectDevice();placeNavLens(selectedNavItem);});
+ window.addEventListener("orientationchange",detectDevice);
+ if(window.visualViewport)window.visualViewport.addEventListener("resize",detectDevice);
  window.addEventListener("hashchange",function(){
   var href=location.hash||"#home";
   var match=navItems.find(function(item){return item.getAttribute("href")===href});
