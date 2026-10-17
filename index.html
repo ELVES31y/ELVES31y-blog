@@ -297,17 +297,76 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
  .bottom-nav .tab{min-height:48px}
 }
 
+
+/* Mouse-following Fresnel lens: one independent material sliding beneath the four tabs. */
+.nav-lens{
+ position:absolute;left:0;top:6px;bottom:6px;width:78px;z-index:1;
+ overflow:hidden;pointer-events:none;border-radius:18px;
+ transform:translate3d(var(--nav-lens-x,0px),0,0) scaleX(var(--nav-lens-stretch,1));
+ transform-origin:var(--nav-lens-origin,center);
+ background:rgba(144,184,255,.16);
+ box-shadow:inset 0 0 0 1px rgba(129,174,248,.19),0 3px 9px rgba(98,142,220,.07);
+ transition:transform .44s cubic-bezier(.22,.86,.25,1),width .34s cubic-bezier(.22,.86,.25,1),box-shadow .25s ease;
+ will-change:transform,width;
+}
+.nav-lens .lens-backdrop,.nav-lens .lens-tint,.nav-lens .lens-specular,.nav-lens .lens-rim{
+ position:absolute;inset:0;pointer-events:none;
+}
+.nav-lens .lens-backdrop{
+ z-index:0;background:rgba(255,255,255,.07);
+ -webkit-backdrop-filter:blur(16px) saturate(195%) brightness(1.08);
+ backdrop-filter:blur(16px) saturate(195%) brightness(1.08);
+}
+.nav-lens .lens-tint{
+ z-index:1;
+ background:radial-gradient(ellipse 85% 145% at var(--fresnel-x,28%) var(--fresnel-y,4%),rgba(255,255,255,.57),rgba(255,255,255,.14) 34%,transparent 68%),linear-gradient(136deg,rgba(255,255,255,.3),rgba(161,197,255,.1) 47%,rgba(255,185,218,.055));
+}
+.nav-lens .lens-specular{
+ z-index:2;inset:0;
+ background:linear-gradient(155deg,rgba(255,255,255,.72) 0%,rgba(255,255,255,.19) 7%,transparent 28%,transparent 69%,rgba(133,179,255,.07) 90%,rgba(255,255,255,.22) 100%);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.86),inset 0 -1px 0 rgba(111,151,220,.17),inset 1px 0 0 rgba(125,174,255,.2),inset -1px 0 0 rgba(255,165,207,.18);
+}
+.nav-lens .lens-rim{
+ z-index:3;border:1px solid rgba(255,255,255,.68);
+ box-shadow:inset 0 0 0 .5px rgba(132,175,248,.13),0 0 7px rgba(125,170,248,.055);
+}
+html[data-theme="dark"] .nav-lens{
+ background:rgba(119,166,250,.16);
+ box-shadow:inset 0 0 0 1px rgba(154,191,255,.16),0 4px 12px rgba(0,0,0,.13);
+}
+html[data-theme="dark"] .nav-lens .lens-backdrop{
+ background:rgba(255,255,255,.035);
+ -webkit-backdrop-filter:blur(18px) saturate(185%) brightness(1.1);
+ backdrop-filter:blur(18px) saturate(185%) brightness(1.1);
+}
+html[data-theme="dark"] .nav-lens .lens-tint{
+ background:radial-gradient(ellipse 85% 145% at var(--fresnel-x,28%) var(--fresnel-y,4%),rgba(255,255,255,.29),rgba(155,190,255,.11) 35%,transparent 68%),linear-gradient(136deg,rgba(255,255,255,.13),rgba(121,167,255,.08) 48%,rgba(255,185,218,.035));
+}
+html[data-theme="dark"] .nav-lens .lens-specular{
+ background:linear-gradient(155deg,rgba(255,255,255,.39) 0%,rgba(255,255,255,.1) 7%,transparent 30%,transparent 69%,rgba(133,179,255,.08) 90%,rgba(255,255,255,.12) 100%);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(111,151,220,.18),inset 1px 0 0 rgba(125,174,255,.15),inset -1px 0 0 rgba(255,165,207,.13);
+}
+.nav-lens.is-moving{transition:transform .30s cubic-bezier(.18,.8,.24,1),width .25s cubic-bezier(.18,.8,.24,1)}
+.nav-lens.is-dragging{transition:none!important}
+.nav-lens.is-dragging .lens-specular{opacity:.92}
+@supports (clip-path:url(#tabBezierClip)){
+ .nav-lens{border-radius:0;clip-path:url(#tabBezierClip)}
+ .nav-lens .lens-backdrop,.nav-lens .lens-tint,.nav-lens .lens-specular,.nav-lens .lens-rim{clip-path:inherit}
+ .nav-frame{z-index:4}
+ .bottom-nav .tab[aria-current="page"]::before{display:none!important}
+ .bottom-nav .tab[aria-current="page"]{background:transparent;border-color:transparent;box-shadow:none}
+}
+@media(prefers-reduced-transparency:reduce){
+ .nav-lens .lens-backdrop{-webkit-backdrop-filter:none;backdrop-filter:none}
+ .nav-lens .lens-tint{background:rgba(129,174,248,.18)}
+}
+
 </style>
 </head>
 <body>
 <div class="app" id="home">
  <div class="statusbar" aria-label="状态栏示意">
   <span id="statusTime">9:41</span>
-  <span class="status-right">
-   <svg class="status-icon" viewBox="0 0 18 14" aria-label="信号"><path d="M1 12V9M5 12V6M9 12V3M13 12V1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M1 13h12" stroke="currentColor" stroke-width=".8" opacity=".45"/></svg>
-   <svg class="status-icon" viewBox="0 0 18 14" aria-label="网络"><path d="M1.5 4.7C5.7 1.2 12.3 1.2 16.5 4.7M4.2 7.5c2.7-2.3 6.9-2.3 9.6 0M7.2 10.3c1-.9 2.6-.9 3.6 0" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" fill="none"/><circle cx="9" cy="12" r="1" fill="currentColor"/></svg>
-   <svg class="battery" viewBox="0 0 25 13" aria-label="电量示意"><rect x=".7" y="1.2" width="20.5" height="10.2" rx="3" fill="none" stroke="currentColor" stroke-width="1.1"/><rect x="2.7" y="3.2" width="14.2" height="6.2" rx="1.6" fill="currentColor" opacity=".78"/><path d="M22.5 4.4v3.4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  </span>
  </div>
  <header class="header">
   <a class="brand" href="#home" aria-label="ELVES31y的小屋首页">
@@ -390,6 +449,9 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
 <nav class="bottom-nav-wrap" aria-label="底部导航">
  <div class="bottom-nav glass" id="bottomNav">
   <svg class="nav-frame" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true"><path d="M .095 .015 C .042 .015 .006 .22 .006 .5 C .006 .78 .042 .985 .095 .985 L .905 .985 C .958 .985 .994 .78 .994 .5 C .994 .22 .958 .015 .905 .015 Z" vector-effect="non-scaling-stroke"/></svg>
+  <span class="nav-lens" id="navLens" aria-hidden="true">
+   <span class="lens-backdrop"></span><span class="lens-tint"></span><span class="lens-specular"></span><span class="lens-rim"></span>
+  </span>
   <a class="tab" href="#home" data-tab="home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7M5.5 9v11h13V9M9.5 20v-7h5v7"/></svg><span>首页</span></a>
   <a class="tab" href="#shortcut-grid" data-tab="resources" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.4"/><rect x="14" y="3" width="7" height="7" rx="1.4"/><rect x="3" y="14" width="7" height="7" rx="1.4"/><rect x="14" y="14" width="7" height="7" rx="1.4"/></svg><span>资源</span></a>
   <a class="tab" href="#contact" data-tab="more"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/></svg><span>更多</span></a>
@@ -506,6 +568,80 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
    tabs.forEach(function(item){item.removeAttribute("aria-current")});
    tab.setAttribute("aria-current","page");
   });
+ });
+
+ /* The active glass lens tracks pointer movement, then springs back to the selected Tab. */
+ var bottomNav=document.getElementById("bottomNav");
+ var navLens=document.getElementById("navLens");
+ var navItems=Array.prototype.slice.call(bottomNav.querySelectorAll("[data-tab]"));
+ var selectedNavItem=navItems.find(function(item){return item.getAttribute("aria-current")==="page"})||navItems[0];
+ var pointerLastX=null;
+ var pointerLastTime=0;
+ var lensRestoreTimer=0;
+ function clampLens(value,min,max){return Math.max(min,Math.min(max,value))}
+ function placeNavLens(item,options){
+  if(!item||!navLens||!bottomNav)return;
+  options=options||{};
+  var navRect=bottomNav.getBoundingClientRect();
+  var tabRect=item.getBoundingClientRect();
+  var offset=tabRect.left-navRect.left;
+  var velocity=Number(options.velocity)||0;
+  var stretch=options.followPointer?1+Math.min(Math.abs(velocity)/65000,.038):1;
+  navLens.style.width=tabRect.width+"px";
+  navLens.style.setProperty("--nav-lens-x",offset+"px");
+  navLens.style.setProperty("--nav-lens-stretch",stretch.toFixed(3));
+  navLens.style.setProperty("--nav-lens-origin",velocity<0?"right center":"left center");
+  if(Number.isFinite(options.clientX)){
+   navLens.style.setProperty("--fresnel-x",clampLens((options.clientX-tabRect.left)/Math.max(1,tabRect.width)*100,8,92).toFixed(1)+"%");
+   navLens.style.setProperty("--fresnel-y",clampLens((options.clientY-tabRect.top)/Math.max(1,tabRect.height)*100,4,96).toFixed(1)+"%");
+  }else{
+   navLens.style.setProperty("--fresnel-x","28%");
+   navLens.style.setProperty("--fresnel-y","4%");
+  }
+  navLens.classList.toggle("is-moving",!!options.followPointer);
+ }
+ placeNavLens(selectedNavItem);
+ bottomNav.addEventListener("pointermove",function(event){
+  if(event.pointerType!=="mouse"&&event.pointerType!=="pen")return;
+  var rect=bottomNav.getBoundingClientRect();
+  var x=event.clientX;
+  var now=performance.now();
+  var velocity=pointerLastX===null?0:(x-pointerLastX)/Math.max(1,now-pointerLastTime)*1000;
+  pointerLastX=x;
+  pointerLastTime=now;
+  var nearest=navItems.reduce(function(best,item){
+   var r=item.getBoundingClientRect();
+   var distance=Math.abs((r.left+r.width/2)-x);
+   if(!best||distance<best.distance)return{item:item,distance:distance};
+   return best;
+  },null);
+  if(nearest)placeNavLens(nearest.item,{followPointer:true,velocity:velocity,clientX:event.clientX,clientY:event.clientY});
+  navLens.style.setProperty("--fresnel-x",clampLens((event.clientX-rect.left)/Math.max(1,rect.width)*100,3,97).toFixed(1)+"%");
+ });
+ bottomNav.addEventListener("pointerenter",function(event){
+  if(event.pointerType!=="mouse"&&event.pointerType!=="pen")return;
+  window.clearTimeout(lensRestoreTimer);
+  navLens.classList.add("is-moving");
+ });
+ bottomNav.addEventListener("pointerleave",function(){
+  pointerLastX=null;
+  pointerLastTime=0;
+  window.clearTimeout(lensRestoreTimer);
+  lensRestoreTimer=window.setTimeout(function(){placeNavLens(selectedNavItem);},45);
+ });
+ navItems.forEach(function(item){
+  item.addEventListener("focus",function(){placeNavLens(item);});
+  item.addEventListener("click",function(){
+   selectedNavItem=item;
+   window.clearTimeout(lensRestoreTimer);
+   placeNavLens(item);
+  });
+ });
+ window.addEventListener("resize",function(){placeNavLens(selectedNavItem);});
+ window.addEventListener("hashchange",function(){
+  var href=location.hash||"#home";
+  var match=navItems.find(function(item){return item.getAttribute("href")===href});
+  if(match){selectedNavItem=match;placeNavLens(match);}
  });
  var timeNode=document.getElementById("statusTime");
  function updateTime(){
