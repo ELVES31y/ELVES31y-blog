@@ -73,6 +73,24 @@
       moveLens(link || activeControl);
     });
     window.addEventListener('hashchange', selectSection);
+    if ('IntersectionObserver' in window) {
+      const sectionLinks = [
+        { selector: '.hero', href: '#home' },
+        { selector: '#posts', href: '#posts' },
+        { selector: '#about', href: '#about' }
+      ];
+      const sectionObserver = new IntersectionObserver(entries => {
+        const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        const item = sectionLinks.find(entry => document.querySelector(entry.selector) === visible.target);
+        const link = item && controls.find(control => control.matches('a[data-dock-link]') && control.getAttribute('href') === item.href);
+        if (link && !dock.matches(':hover')) moveLens(link);
+      }, { rootMargin: '-28% 0px -48% 0px', threshold: [0, .1, .25, .5] });
+      sectionLinks.forEach(item => {
+        const section = document.querySelector(item.selector);
+        if (section) sectionObserver.observe(section);
+      });
+    }
     window.addEventListener('resize', () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => moveLens(activeControl, false));
