@@ -33,10 +33,6 @@ svg{display:block}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--accent-strong);outline-offset:3px}
 .app{width:min(100%,520px);min-height:100vh;margin:0 auto;padding:env(safe-area-inset-top,0) 15px calc(105px + env(safe-area-inset-bottom,0));}
 .statusbar{height:27px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;color:var(--ink);font-size:12px;font-weight:700;letter-spacing:.01em}
-.status-right{display:flex;align-items:center;gap:6px;color:var(--ink)}
-.status-icon{width:16px;height:14px;display:block}
-.battery{width:24px;height:12px}
-.status-caption{font-size:10px;color:var(--muted);font-weight:550;margin-left:-3px}
 .header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;min-height:49px}
 .brand{display:flex;align-items:center;gap:9px;min-width:0;color:var(--ink);text-decoration:none}
 .logo{position:relative;width:36px;height:36px;flex:0 0 auto;display:grid;place-items:center;border-radius:13px;border:1px solid rgba(255,255,255,.78);background:linear-gradient(145deg,rgba(255,255,255,.78),rgba(199,221,255,.54));box-shadow:0 4px 12px rgba(70,104,160,.09),inset 0 1px 0 rgba(255,255,255,.9);color:#6495e1;font-size:22px;font-weight:780;letter-spacing:-.08em}
@@ -289,6 +285,7 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
  .bottom-nav .tab[aria-current="page"]::after{display:none}
  .bottom-nav .tab svg,.bottom-nav .tab span{position:relative;z-index:1}
  .bottom-nav .tab[aria-current="page"]{color:var(--accent-strong)}
+ .bottom-nav .tab:hover{color:var(--accent-strong)}
  .bottom-nav-wrap{filter:drop-shadow(0 13px 17px rgba(43,62,97,.13)) drop-shadow(0 2px 4px rgba(43,62,97,.055))}
  html[data-theme="dark"] .bottom-nav-wrap{filter:drop-shadow(0 13px 17px rgba(0,0,0,.24)) drop-shadow(0 2px 4px rgba(0,0,0,.13))}
 }
@@ -327,8 +324,12 @@ html[data-theme="dark"] .search-input{background:rgba(8,13,22,.23)}
  box-shadow:inset 0 1px 0 rgba(255,255,255,.86),inset 0 -1px 0 rgba(111,151,220,.17),inset 1px 0 0 rgba(125,174,255,.2),inset -1px 0 0 rgba(255,165,207,.18);
 }
 .nav-lens .lens-rim{
- z-index:3;border:1px solid rgba(255,255,255,.68);
- box-shadow:inset 0 0 0 .5px rgba(132,175,248,.13),0 0 7px rgba(125,170,248,.055);
+ z-index:3;border:0;padding:1px;opacity:.72;
+ background:conic-gradient(from 210deg,rgba(255,255,255,.34) 0deg,rgba(255,255,255,.92) 48deg,rgba(122,176,255,.46) 112deg,rgba(255,255,255,.26) 181deg,rgba(255,171,214,.36) 257deg,rgba(255,255,255,.66) 326deg,rgba(255,255,255,.34) 360deg);
+ -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ -webkit-mask-composite:xor;
+ mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+ mask-composite:exclude;
 }
 html[data-theme="dark"] .nav-lens{
  background:rgba(119,166,250,.16);
@@ -342,11 +343,15 @@ html[data-theme="dark"] .nav-lens .lens-backdrop{
 html[data-theme="dark"] .nav-lens .lens-tint{
  background:radial-gradient(ellipse 85% 145% at var(--fresnel-x,28%) var(--fresnel-y,4%),rgba(255,255,255,.29),rgba(155,190,255,.11) 35%,transparent 68%),linear-gradient(136deg,rgba(255,255,255,.13),rgba(121,167,255,.08) 48%,rgba(255,185,218,.035));
 }
+html[data-theme="dark"] .nav-lens .lens-rim{
+ opacity:.54;
+ background:conic-gradient(from 210deg,rgba(255,255,255,.22) 0deg,rgba(255,255,255,.58) 48deg,rgba(122,176,255,.37) 112deg,rgba(255,255,255,.17) 181deg,rgba(255,171,214,.27) 257deg,rgba(255,255,255,.42) 326deg,rgba(255,255,255,.22) 360deg);
+}
 html[data-theme="dark"] .nav-lens .lens-specular{
  background:linear-gradient(155deg,rgba(255,255,255,.39) 0%,rgba(255,255,255,.1) 7%,transparent 30%,transparent 69%,rgba(133,179,255,.08) 90%,rgba(255,255,255,.12) 100%);
  box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(111,151,220,.18),inset 1px 0 0 rgba(125,174,255,.15),inset -1px 0 0 rgba(255,165,207,.13);
 }
-.nav-lens.is-moving{transition:transform .30s cubic-bezier(.18,.8,.24,1),width .25s cubic-bezier(.18,.8,.24,1)}
+.nav-lens.is-moving{transition:transform .12s cubic-bezier(.2,.7,.1,1),width .15s cubic-bezier(.18,.8,.24,1)}
 .nav-lens.is-dragging{transition:none!important}
 .nav-lens.is-dragging .lens-specular{opacity:.92}
 @supports (clip-path:url(#tabBezierClip)){
@@ -603,20 +608,26 @@ html[data-theme="dark"] .nav-lens .lens-specular{
  placeNavLens(selectedNavItem);
  bottomNav.addEventListener("pointermove",function(event){
   if(event.pointerType!=="mouse"&&event.pointerType!=="pen")return;
-  var rect=bottomNav.getBoundingClientRect();
-  var x=event.clientX;
+  var navRect=bottomNav.getBoundingClientRect();
+  var firstRect=navItems[0].getBoundingClientRect();
+  var lastRect=navItems[navItems.length-1].getBoundingClientRect();
+  var lensWidth=firstRect.width;
+  var minX=firstRect.left-navRect.left;
+  var maxX=lastRect.right-navRect.left-lensWidth;
+  var desiredX=event.clientX-navRect.left-lensWidth/2;
+  var lensX=clampLens(desiredX,minX,maxX);
   var now=performance.now();
-  var velocity=pointerLastX===null?0:(x-pointerLastX)/Math.max(1,now-pointerLastTime)*1000;
-  pointerLastX=x;
+  var velocity=pointerLastX===null?0:(event.clientX-pointerLastX)/Math.max(1,now-pointerLastTime)*1000;
+  pointerLastX=event.clientX;
   pointerLastTime=now;
-  var nearest=navItems.reduce(function(best,item){
-   var r=item.getBoundingClientRect();
-   var distance=Math.abs((r.left+r.width/2)-x);
-   if(!best||distance<best.distance)return{item:item,distance:distance};
-   return best;
-  },null);
-  if(nearest)placeNavLens(nearest.item,{followPointer:true,velocity:velocity,clientX:event.clientX,clientY:event.clientY});
-  navLens.style.setProperty("--fresnel-x",clampLens((event.clientX-rect.left)/Math.max(1,rect.width)*100,3,97).toFixed(1)+"%");
+  var stretch=1+Math.min(Math.abs(velocity)/65000,.038);
+  navLens.style.width=lensWidth+"px";
+  navLens.style.setProperty("--nav-lens-x",lensX+"px");
+  navLens.style.setProperty("--nav-lens-stretch",stretch.toFixed(3));
+  navLens.style.setProperty("--nav-lens-origin",velocity<0?"right center":"left center");
+  navLens.style.setProperty("--fresnel-x",clampLens((event.clientX-(navRect.left+lensX))/Math.max(1,lensWidth)*100,3,97).toFixed(1)+"%");
+  navLens.style.setProperty("--fresnel-y",clampLens((event.clientY-navRect.top-6)/Math.max(1,navRect.height-12)*100,4,96).toFixed(1)+"%");
+  navLens.classList.add("is-moving");
  });
  bottomNav.addEventListener("pointerenter",function(event){
   if(event.pointerType!=="mouse"&&event.pointerType!=="pen")return;
