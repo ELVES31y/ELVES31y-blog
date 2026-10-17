@@ -636,7 +636,7 @@ body.dark .scene-glass-chip{background:rgba(255,255,255,.08);border-color:rgba(2
    performs the optical displacement on the active lens itself. */
 .bottom-dock{
   left:0!important;right:0!important;margin-inline:auto!important;
-  transform:none!important;isolation:auto!important;transform-style:flat!important;
+  transform:none!important;isolation:auto!important;transform-style:flat!important;will-change:auto!important;
   background:rgba(245,246,250,.12)!important;
   border:1px solid rgba(255,255,255,.3)!important;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
@@ -649,7 +649,7 @@ body.dark .scene-glass-chip{background:rgba(255,255,255,.08);border-color:rgba(2
   border:0!important;border-radius:999px!important;
   background:transparent!important;box-shadow:none!important;
   overflow:hidden;pointer-events:none;
-  --lg-blur:7px;--lg-saturate:185%;--lg-brightness:.82;--lg-contrast:1.04;
+  --lg-blur:7px;--lg-saturate:185%;--lg-brightness:.82;--lg-contrast:1.04;--lg-refract:url(#lg-refract);
   transition:transform .58s cubic-bezier(.22,.85,.24,1),width .58s cubic-bezier(.22,.85,.24,1);
   will-change:transform,width;
 }
