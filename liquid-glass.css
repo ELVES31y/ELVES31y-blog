@@ -1,0 +1,237 @@
+@import url("./vendor/liquid-glass-core.css");
+
+/* Liquid Glass UI module — material only; page layout stays in upgrade.css.
+   Every effect is component-scoped. html/body never receive backdrop-filter. */
+:root{
+  --glass-transparency:.743;
+  --glass-tint-light:.30;
+  --glass-tint-dark:.24;
+  --glass-blur:9.4px;
+  --glass-rim-alpha:.58;
+  --glass-chroma-alpha:.15;
+  --lg-rim-lit:.33;--lg-rim-dark:.36;--lg-rim-hold:1px;--lg-rim-fade:15px;--lg-rim-side:6px;
+  --ease-apple-out:cubic-bezier(.32,.72,0,1);
+  --ease-apple-liquid:cubic-bezier(.22,.85,.24,1);
+}
+html{background:var(--bg,#f5f5f7)}
+/* Static base layer: no background canvas or global filter in phase one. */
+body{background-color:var(--bg,#f5f5f7)}
+/* Shared per-component material parameters. */
+.liquid-glass{
+  --lg-blur:var(--glass-blur,10px);
+  --lg-saturate:172%;
+  --lg-brightness:.88;
+  --lg-contrast:1.035;
+  --lg-refract:url(#lg-refract-sm);
+}
+html.dark .liquid-glass,body.dark .liquid-glass{
+  --lg-blur:var(--glass-blur,10px);
+  --lg-saturate:188%;
+  --lg-brightness:.78;
+  --lg-contrast:1.055;
+}
+.liquid-glass-effect{
+  -webkit-backdrop-filter:blur(var(--lg-blur,10px)) saturate(var(--lg-saturate,165%)) brightness(var(--lg-brightness,.88)) contrast(var(--lg-contrast,1.03));
+  backdrop-filter:blur(var(--lg-blur,10px)) saturate(var(--lg-saturate,165%)) brightness(var(--lg-brightness,.88)) contrast(var(--lg-contrast,1.03));
+  filter:var(--lg-refract,none);
+}
+.liquid-glass-tint{
+  background:rgba(248,248,251,var(--glass-tint-light,.3));
+  transition:background-color .2s linear;
+}
+html.dark .liquid-glass-tint,body.dark .liquid-glass-tint{
+  background:rgba(26,27,32,var(--glass-tint-dark,.24));
+}
+html:not(.dark) .liquid-glass-shine{
+  --lg-rim-lit:calc(var(--glass-rim-alpha,.58) * .56);
+  --lg-rim-dark:.12;
+  box-shadow:inset 0 13px 14px -13px rgba(255,255,255,.66),inset 0 -10px 12px -12px rgba(255,255,255,.48);
+}
+html.dark .liquid-glass-shine,body.dark .liquid-glass-shine{
+  --lg-rim-lit:var(--glass-rim-alpha,.58);
+  --lg-rim-dark:.26;
+  box-shadow:inset 0 16px 16px -16px rgba(255,255,255,.38),inset 0 -16px 16px -16px rgba(255,255,255,.27);
+}
+/* A restrained optical fringe is visible at the bezel only; the content layer
+   remains untouched and text is never displaced or filtered. */
+.liquid-glass-shine::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 1px 0 rgba(129,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,158,201,calc(var(--glass-chroma-alpha,.15) * .72));
+  opacity:.78;
+}
+html.is-safari .liquid-glass-effect{
+  filter:none!important;
+  --lg-refract:none!important;
+}
+@media (hover:none),(pointer:coarse){
+  .liquid-glass-effect{filter:none!important;--lg-refract:none!important}
+}
+
+/* Header chrome: material is a child layer, so the menu dropdown remains unclipped. */
+.site-header.glass-chrome{
+  position:sticky;isolation:auto;overflow:visible;
+  background:transparent!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  --lg-blur:var(--glass-blur,10px);
+  border-bottom:1px solid rgba(100,105,122,.12);
+}
+.site-header.glass-chrome>.glass-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.site-header.glass-chrome>.liquid-glass-effect{z-index:0}
+.site-header.glass-chrome>.liquid-glass-tint{z-index:1;background:rgba(249,249,252,var(--glass-tint-light,.3))}
+.site-header.glass-chrome>.liquid-glass-shine{z-index:2}
+.site-header.glass-chrome>.brand,
+.site-header.glass-chrome>nav,
+.site-header.glass-chrome>.header-tools{position:relative;z-index:3}
+.site-header.glass-chrome>.liquid-glass-shine::before{--lg-rim-lit:.32;--lg-rim-dark:.12;--lg-rim-fade:12px;--lg-rim-side:5px}
+html.dark .site-header.glass-chrome>.liquid-glass-tint,body.dark .site-header.glass-chrome>.liquid-glass-tint{background:rgba(19,20,25,var(--glass-tint-dark,.24))}
+.site-header.glass-chrome:after{z-index:3;pointer-events:none;opacity:.5}
+
+/* Cards: the optical layers sit behind the content. No transform/filter is
+   applied to title, summary, links, or other readable content. */
+#postGrid>.post-card.glass-card{
+  position:relative;isolation:auto;overflow:hidden!important;transform:none!important;filter:none!important;
+  border:1px solid rgba(255,255,255,.58)!important;
+  border-radius:17px!important;
+  background:transparent!important;
+  box-shadow:0 12px 34px rgba(31,35,48,.055),inset 0 1px 0 rgba(255,255,255,.72)!important;
+}
+#postGrid>.post-card.glass-card>.liquid-glass-effect,
+#postGrid>.post-card.glass-card>.liquid-glass-tint,
+#postGrid>.post-card.glass-card>.liquid-glass-shine{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#postGrid>.post-card.glass-card>.liquid-glass-effect{z-index:0;--lg-blur:var(--glass-blur,10px);--lg-refract:url(#lg-refract-sm)}
+#postGrid>.post-card.glass-card>.liquid-glass-tint{z-index:1;background:rgba(250,250,252,var(--glass-tint-light,.3))}
+#postGrid>.post-card.glass-card>.liquid-glass-shine{z-index:2}
+#postGrid>.post-card.glass-card>.post-cover,
+#postGrid>.post-card.glass-card>.post-info{position:relative;z-index:3}
+#postGrid>.post-card.glass-card>.post-cover{border-radius:0}
+#postGrid>.post-card.glass-card>.post-info{background:transparent}
+#postGrid>.post-card.glass-card:before{
+  z-index:2;opacity:.035!important;mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.52'/%3E%3C/svg%3E")!important;
+  background-size:120px 120px!important;
+}
+#postGrid>.post-card.glass-card:hover:before{opacity:.04!important}
+#postGrid>.post-card.glass-card:after{
+  z-index:4;opacity:.68;
+  background:linear-gradient(130deg,rgba(255,255,255,.68),transparent 32%,rgba(135,180,255,.12) 63%,rgba(255,174,207,.10) 78%,rgba(255,255,255,.48));
+}
+#postGrid>.post-card:first-child.glass-card:not([hidden]){
+  border-radius:22px!important;
+  box-shadow:0 18px 42px rgba(31,35,48,.075),inset 0 1px 0 rgba(255,255,255,.82)!important;
+}
+html.dark #postGrid>.post-card.glass-card,body.dark #postGrid>.post-card.glass-card{
+  border-color:rgba(255,255,255,.15)!important;
+  box-shadow:0 15px 38px rgba(0,0,0,.17),inset 0 1px 0 rgba(255,255,255,.08)!important;
+}
+html.dark #postGrid>.post-card.glass-card>.liquid-glass-tint,body.dark #postGrid>.post-card.glass-card>.liquid-glass-tint{background:rgba(28,29,35,var(--glass-tint-dark,.24))}
+html.dark #postGrid>.post-card.glass-card:after,body.dark #postGrid>.post-card.glass-card:after{
+  background:linear-gradient(130deg,rgba(255,255,255,.22),transparent 32%,rgba(135,180,255,.10) 63%,rgba(255,174,207,.075) 78%,rgba(255,255,255,.15));
+}
+html.motion-ready .post-card.glass-card,
+html.motion-ready .hero-art.glass-card{opacity:1!important;transform:none!important;filter:none!important;}
+
+/* The floating dock uses one moving lens. Its outer capsule and lens are two
+   separate glass surfaces, each with one blur pass rather than stacked filters. */
+.bottom-dock.lg-navbar{
+  isolation:auto!important;transform:none!important;transform-style:flat!important;will-change:auto!important;
+  background:rgba(247,248,251,.09)!important;
+  border:1px solid rgba(255,255,255,.48)!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  box-shadow:0 16px 42px rgba(28,34,49,.14),inset 0 1px 0 rgba(255,255,255,.64)!important;
+}
+.bottom-dock.lg-navbar:before{z-index:0;background:linear-gradient(130deg,rgba(255,255,255,.28),transparent 42%,rgba(255,255,255,.07) 80%,rgba(255,255,255,.2))!important}
+.bottom-dock .dock-liquid-indicator.liquid-glass{
+  z-index:1;top:6px;left:0;height:calc(100% - 12px);padding:0!important;margin:0!important;
+  border:0!important;border-radius:999px!important;background:transparent!important;box-shadow:none!important;
+  overflow:hidden;pointer-events:none;
+  --lg-blur:var(--glass-blur,10px);--lg-saturate:190%;--lg-brightness:.88;--lg-contrast:1.04;--lg-refract:url(#lg-refract);
+  transition:transform .58s var(--ease-apple-liquid),width .58s var(--ease-apple-liquid),border-radius .34s var(--ease-apple-liquid);
+  will-change:transform,width;
+}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-effect,
+.bottom-dock .dock-liquid-indicator>.liquid-glass-tint,
+.bottom-dock .dock-liquid-indicator>.liquid-glass-shine{position:absolute;inset:0;width:100%;height:100%;border-radius:inherit;pointer-events:none}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-effect{z-index:0}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-tint{z-index:1;background:rgba(255,255,255,var(--glass-tint-light,.3))!important}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-shine{z-index:2;box-shadow:inset 0 1px 1px rgba(255,255,255,.54),inset 0 -1px 1px rgba(255,255,255,.18)}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-shine:before{--lg-rim-lit:var(--glass-rim-alpha,.58);--lg-rim-dark:.14;--lg-rim-fade:11px;--lg-rim-side:5px}
+.bottom-dock .dock-liquid-indicator>.liquid-glass-shine:after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  box-shadow:inset 1px 0 rgba(127,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,151,201,calc(var(--glass-chroma-alpha,.15) * .72));
+}
+.bottom-dock .dock-liquid-indicator:after{display:none!important}
+.bottom-dock a.active .dock-label,
+.bottom-dock button.active .dock-label{text-shadow:-.16px 0 rgba(255,142,193,.18),.16px 0 rgba(114,174,255,.2)}
+html.dark .bottom-dock.lg-navbar,body.dark .bottom-dock.lg-navbar{
+  background:rgba(20,21,26,.15)!important;border-color:rgba(255,255,255,.2)!important;
+  box-shadow:0 17px 46px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)!important;
+}
+html.dark .bottom-dock .dock-liquid-indicator>.liquid-glass-tint,body.dark .bottom-dock .dock-liquid-indicator>.liquid-glass-tint{background:rgba(30,31,37,var(--glass-tint-dark,.24))!important}
+html.dark .bottom-dock .dock-liquid-indicator>.liquid-glass-shine:before,body.dark .bottom-dock .dock-liquid-indicator>.liquid-glass-shine:before{--lg-rim-lit:var(--glass-rim-alpha,.58);--lg-rim-dark:.28}
+html.dark .bottom-dock a.active,html.dark .bottom-dock button.active,body.dark .bottom-dock a.active,body.dark .bottom-dock button.active{color:#f5f5f7}
+html.is-safari .bottom-dock .dock-liquid-indicator>.liquid-glass-effect{filter:none!important;--lg-refract:none!important}
+@media(max-width:650px){
+  .bottom-dock.lg-navbar{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  #postGrid>.post-card.glass-card:not(:first-child){border-radius:14px!important}
+}
+@media(prefers-reduced-transparency:reduce){
+  .liquid-glass-effect{-webkit-backdrop-filter:blur(22px) saturate(120%);backdrop-filter:blur(22px) saturate(120%);filter:none!important;--lg-refract:none!important}
+  .liquid-glass-tint{background:rgba(248,248,251,.82)!important}
+  html.dark .liquid-glass-tint,body.dark .liquid-glass-tint{background:rgba(30,31,36,.82)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .bottom-dock .dock-liquid-indicator,.glass-settings-panel{transition:none!important;animation:none!important}
+}
+
+/* Reusable floating controls and the iOS-like transparency setting popover. */
+.header-tools{position:relative;z-index:4}
+.glass-settings-button svg{width:17px;height:17px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.glass-settings-button[aria-expanded="true"]{background:rgba(255,255,255,.78);border-color:rgba(90,110,150,.22);box-shadow:0 4px 14px rgba(30,42,68,.1),inset 0 1px 0 rgba(255,255,255,.9)}
+.glass-settings-panel{
+  position:fixed!important;z-index:120;top:86px;right:clamp(12px,3.5vw,44px);
+  width:min(316px,calc(100vw - 24px));padding:0!important;overflow:hidden!important;
+  border:1px solid rgba(255,255,255,.74)!important;border-radius:23px!important;
+  background:transparent!important;box-shadow:0 22px 70px rgba(24,30,45,.18),inset 0 1px 0 rgba(255,255,255,.75)!important;
+  --lg-blur:var(--glass-blur,10px);--lg-saturate:178%;--lg-brightness:.89;--lg-contrast:1.04;
+  opacity:0;transform:translateY(-5px) scale(.985);
+  transition:opacity .17s ease,transform .2s var(--ease-apple-out);
+}
+.glass-settings-panel[hidden]{display:none!important}
+.glass-settings-panel.is-open{opacity:1;transform:translateY(0) scale(1)}
+.glass-settings-panel>.liquid-glass-effect,.glass-settings-panel>.liquid-glass-tint,.glass-settings-panel>.liquid-glass-shine{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.glass-settings-panel>.liquid-glass-effect{z-index:0}
+.glass-settings-panel>.liquid-glass-tint{z-index:1;background:rgba(249,249,252,var(--glass-tint-light,.3))}
+.glass-settings-panel>.liquid-glass-shine{z-index:2}
+.glass-settings-panel>.glass-settings-content{position:relative;z-index:3;padding:20px 20px 18px;color:#1d1d1f}
+.glass-settings-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.glass-settings-title{font-size:15px;font-weight:650;letter-spacing:-.025em;line-height:1.35}
+.glass-settings-subtitle{display:block;margin-top:3px;color:#777982;font-size:10px;letter-spacing:.08em}
+.glass-settings-close{display:grid;place-items:center;width:28px;height:28px;border:1px solid rgba(80,86,104,.13);border-radius:50%;background:rgba(255,255,255,.45);color:#5b5e68;font-size:18px;line-height:1;cursor:pointer}
+.glass-transparency-line{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.glass-transparency-line label{font-size:12px;font-weight:600}
+.glass-transparency-line output{font-size:12px;font-variant-numeric:tabular-nums;color:#555d70}
+.glass-range{display:block;width:100%;height:24px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:pointer;touch-action:pan-y}
+.glass-range::-webkit-slider-runnable-track{height:5px;border-radius:9px;background:linear-gradient(90deg,#ced0d6,#f0f1f4);box-shadow:inset 0 0 0 1px rgba(70,76,96,.1)}
+.glass-range::-moz-range-track{height:5px;border-radius:9px;background:linear-gradient(90deg,#ced0d6,#f0f1f4);box-shadow:inset 0 0 0 1px rgba(70,76,96,.1)}
+.glass-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:20px;height:20px;margin-top:-7.5px;border:1px solid rgba(255,255,255,.94);border-radius:50%;background:linear-gradient(145deg,#fff,#e9eaf0);box-shadow:0 2px 7px rgba(30,40,60,.2),inset 0 1px 0 #fff}
+.glass-range::-moz-range-thumb{width:18px;height:18px;border:1px solid rgba(255,255,255,.94);border-radius:50%;background:linear-gradient(145deg,#fff,#e9eaf0);box-shadow:0 2px 7px rgba(30,40,60,.2)}
+.glass-range:focus-visible{outline:2px solid #1677ff;outline-offset:4px;border-radius:8px}
+.glass-range-labels{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:5px;color:#777982;font-size:10px}
+.glass-settings-note{margin:16px 0 0;padding-top:13px;border-top:1px solid rgba(70,76,96,.1);color:#737783;font-size:10px;line-height:1.65}
+.glass-settings-panel svg,.glass-settings-panel input,.glass-settings-panel button{position:relative}
+html.dark .glass-settings-panel>.liquid-glass-tint,body.dark .glass-settings-panel>.liquid-glass-tint{background:rgba(26,27,32,var(--glass-tint-dark,.24))}
+html.dark .glass-settings-panel>.glass-settings-content,body.dark .glass-settings-panel>.glass-settings-content{color:#f5f5f7}
+html.dark .glass-settings-subtitle,html.dark .glass-transparency-line output,html.dark .glass-range-labels,html.dark .glass-settings-note,body.dark .glass-settings-subtitle,body.dark .glass-transparency-line output,body.dark .glass-range-labels,body.dark .glass-settings-note{color:#a7a9b2}
+html.dark .glass-settings-note,body.dark .glass-settings-note{border-top-color:rgba(255,255,255,.1)}
+html.dark .glass-settings-close,body.dark .glass-settings-close{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.13);color:#e7e7eb}
+html.dark .glass-range::-webkit-slider-runnable-track,body.dark .glass-range::-webkit-slider-runnable-track{background:linear-gradient(90deg,#555761,#303139);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+html.dark .glass-range::-moz-range-track,body.dark .glass-range::-moz-range-track{background:linear-gradient(90deg,#555761,#303139);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+html.dark .glass-range::-webkit-slider-thumb,body.dark .glass-range::-webkit-slider-thumb{background:linear-gradient(145deg,#f7f7fa,#b8bac4);border-color:#fff}
+html.dark .site-header.glass-chrome>.liquid-glass-tint,body.dark .site-header.glass-chrome>.liquid-glass-tint{background:rgba(19,20,25,var(--glass-tint-dark,.24))}
+html.dark #postGrid>.post-card.glass-card>.liquid-glass-effect,body.dark #postGrid>.post-card.glass-card>.liquid-glass-effect{--lg-blur:var(--glass-blur,10px)}
+html.is-safari .liquid-glass-effect{filter:none!important;--lg-refract:none!important}
+@media(max-width:650px){
+  .glass-settings-panel{top:76px;right:12px}
+  .glass-settings-panel>.glass-settings-content{padding:18px}
+}
+@media(prefers-reduced-motion:reduce){.glass-settings-panel{transition:none!important}}
