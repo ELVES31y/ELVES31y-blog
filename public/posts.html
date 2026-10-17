@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文章 - ELVES31y的小屋</title>
+  <meta name="description" content="ELVES31y的小屋 - 文章列表">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <main class="main" id="app">
+    <div class="container">
+      <div class="page-header fade-in">
+        <div class="head"><span data-icon="posts"></span><h1>文章</h1></div>
+        <p class="sub">记录技术探索与生活感悟</p>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <input class="glass-input" id="search-input" placeholder="搜索文章标题、简介或正文..." style="max-width:420px">
+      </div>
+
+      <div class="filter-tabs" id="filter-tabs"></div>
+
+      <div class="post-grid" id="post-grid"></div>
+
+      <div style="display:flex;justify-content:center;margin-top:24px">
+        <button class="btn-ghost hidden" id="load-more">加载更多</button>
+      </div>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+  <script src="js/common.js"></script>
+  <script src="js/posts.js"></script>
+</body>
+</html>

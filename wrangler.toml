@@ -1,0 +1,32 @@
+# ============================================================
+#  ELVES31y的小屋 — Cloudflare Pages 配置
+# ============================================================
+
+name = "elves31y-blog"
+compatibility_date = "2025-01-01"
+
+# 静态文件目录：Pages 会把这个目录里的文件直接当作网页发布
+pages_build_output_dir = "public"
+
+# ---- D1 数据库绑定 -------------------------------------------------
+[[d1_databases]]
+binding = "DB"
+database_name = "elves31y-blog-db"
+database_id = "f6c052b0-bca7-4b19-8e52-4f400d126797"
+
+# ---- R2 存储桶绑定（可选，本项目暂时不用） ---------------------------
+# 说明：图片走外链即可，不需要 R2。
+# 以后启用 R2 时：去掉下面 3 行的 # 号，建好桶，再到面板设置 R2_PUBLIC_BASE。
+# [[r2_buckets]]
+# binding = "R2"
+# bucket_name = "elves31y-blog-images"
+
+# ---- 环境变量 -------------------------------------------------------
+# ⚠ 重要：ADMIN_SECRET 千万不要写在这个文件里！
+#   如果你把代码推到 GitHub 公开仓库，写在这里等于把登录密钥公开给别人。
+#
+#   正确做法：部署完成后，到 Cloudflare 面板设置环境变量：
+#     Settings → Environment variables → 添加 ADMIN_SECRET
+#
+#   随机串可以这样生成（在终端跑）：
+#     node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
