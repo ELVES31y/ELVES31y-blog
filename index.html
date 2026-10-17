@@ -486,6 +486,20 @@ html[data-theme="dark"] .device-info{background:rgba(255,255,255,.035)}
  main{display:block}
 }
 
+
+/* Keep the 3 shortcut cards comfortable on narrower desktop windows. */
+@media(min-width:900px) and (max-width:1099px){
+ .welcome{grid-column:span 6}
+ #shortcut-grid{grid-column:span 6;padding:18px}
+ .entry{gap:6px;padding:9px 6px}
+ .entry-icon{width:29px;height:29px;flex-basis:29px}
+ .entry-icon svg{width:16px;height:16px}
+ .entry-label{font-size:11px}
+ .entry-arrow{font-size:10px}
+ .banner-orb-wrap{right:5%;width:178px;height:178px}
+ .banner-orb{width:125px;height:125px}
+}
+
 </style>
 </head>
 <body>
