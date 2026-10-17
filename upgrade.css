@@ -458,3 +458,121 @@ body.dark .search-dialog>p{color:var(--muted)}
 body.dark .site-details-foot,body.dark .article-meta,body.dark .comments p{color:var(--muted)}
 @media(max-width:650px){body.dark .site-header nav{background:rgba(30,30,32,.9);border-bottom-color:var(--line)}}
 @media(hover:none){body:before{display:none}.post-card:before{display:none}}
+
+
+/* Precision pass — content-first layout, localized blur and a GPU-friendly glass lens */
+:root{--ease-fluid:cubic-bezier(.2,.78,.22,1);--ease-spring:cubic-bezier(.2,1,.28,1)}
+/* Remove the full-viewport pointer-follow blur. It forced a repaint of the whole page
+   on every pointer event and was the main avoidable source of interaction jank. */
+body:before{display:none!important}
+.hero-art,.site-details-inner,.about-status,.search-field,.search-dialog,.dialog-input{
+  -webkit-backdrop-filter:blur(18px) saturate(145%);
+  backdrop-filter:blur(18px) saturate(145%);
+}
+/* Fewer surfaces: one lead story, then a quiet editorial list instead of four equal cards. */
+#posts.section{position:relative;isolation:isolate;padding-top:70px;padding-bottom:66px}
+#posts>.section-top,#posts>.post-controls,#posts>#postGrid,#posts>#emptyState{position:relative;z-index:1}
+#postGrid.post-grid{display:flex;flex-direction:column;gap:0}
+#postGrid>.post-card{
+  min-width:0;transform:none!important;will-change:auto;
+  border-radius:0;box-shadow:none;background:transparent;border:0;
+  border-bottom:1px solid var(--line);overflow:visible;
+  transition:background .28s ease,border-color .28s ease;
+}
+#postGrid>.post-card:before,#postGrid>.post-card:after{display:none!important}
+#postGrid>.post-card:hover{transform:none!important;box-shadow:none}
+#postGrid>.post-card:first-child:not([hidden]){
+  display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
+  align-items:stretch;margin-bottom:17px;border:1px solid rgba(255,255,255,.88);
+  border-radius:23px;overflow:hidden;background:rgba(255,255,255,.66);
+  box-shadow:0 12px 34px rgba(31,35,48,.055),inset 0 1px 0 rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);
+}
+#postGrid>.post-card:first-child .post-cover{height:100%;min-height:246px;border-radius:0}
+#postGrid>.post-card:first-child .post-info{display:flex;flex-direction:column;justify-content:center;padding:clamp(22px,3.2vw,38px)}
+#postGrid>.post-card:first-child .post-info h3{font-size:clamp(21px,2.4vw,28px);line-height:1.32;letter-spacing:-.045em;margin:15px 0 10px}
+#postGrid>.post-card:first-child .post-info>p{font-size:13px;max-width:36em;line-height:1.95}
+#postGrid>.post-card:not(:first-child){display:grid;grid-template-columns:148px minmax(0,1fr);align-items:center;gap:23px;padding:15px 8px}
+#postGrid>.post-card:not(:first-child):hover{background:rgba(255,255,255,.38);border-radius:13px}
+#postGrid>.post-card:not(:first-child) .post-cover{height:98px;border-radius:13px}
+#postGrid>.post-card:not(:first-child) .post-info{padding:2px 0;min-width:0}
+#postGrid>.post-card:not(:first-child) .post-info h3{font-size:16px;margin:7px 0 4px;letter-spacing:-.025em}
+#postGrid>.post-card:not(:first-child) .post-info>p{font-size:12px;margin-bottom:7px;line-height:1.7}
+#postGrid>.post-card:not(:first-child) .post-meta{gap:8px}
+#postGrid>.post-card:not(:first-child) .read-more{font-size:10px}
+#postGrid>.post-card[hidden]{display:none!important}
+/* Content is allowed to breathe. Supporting numbers are typography, not extra nested cards. */
+.about{position:relative;isolation:isolate;border-top:0;padding-top:62px;padding-bottom:58px}
+.about-emblem{box-shadow:none}
+.about-status{padding:0;border:0;background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.interest-tags span{background:transparent}
+.site-details{position:relative;isolation:isolate;padding-bottom:132px}
+.site-details-inner{padding:22px 0 18px;border:0;border-top:1px solid var(--line);border-radius:0;background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+.site-details-inner:before{display:none}
+.site-stats{gap:0}
+.site-stat{padding:12px 18px;border:0;border-left:1px solid var(--line);border-radius:0;background:transparent}
+.site-stat:first-child{border-left:0;padding-left:0}
+.site-stat strong{font-size:20px}
+.site-details-foot{margin-top:12px}
+/* Section joins have a narrow, masked backdrop blur, not a giant translucent overlay. */
+#posts.section:before,#posts.section:after,.about:before,.site-details:before{
+  content:"";position:absolute;left:0;right:0;height:92px;z-index:0;pointer-events:none;
+  -webkit-backdrop-filter:blur(22px) saturate(118%);backdrop-filter:blur(22px) saturate(118%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.75) 42%,transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,.75) 42%,transparent 100%);
+  opacity:.55;
+}
+#posts.section:before{top:-48px}
+#posts.section:after{bottom:-48px}
+.about:before{top:-48px}
+.site-details:before{top:-48px}
+body.dark #postGrid>.post-card:first-child:not([hidden]){
+  background:rgba(36,36,38,.68);border-color:rgba(255,255,255,.12);
+  box-shadow:0 12px 34px rgba(0,0,0,.14),inset 0 1px 0 rgba(255,255,255,.07);
+}
+body.dark #postGrid>.post-card:not(:first-child):hover{background:rgba(255,255,255,.035)}
+body.dark .site-details-inner{background:transparent;border-color:var(--line);box-shadow:none}
+body.dark .site-stat{background:transparent;border-left-color:var(--line)}
+body.dark .about-status{background:transparent;border:0}
+body.dark .interest-tags span{background:transparent}
+body.dark #posts.section:before,body.dark #posts.section:after,body.dark .about:before,body.dark .site-details:before{opacity:.3}
+body.dark .dock-liquid-indicator{filter:none}
+/* Keep the drag displacement filter dormant unless the user is directly manipulating the lens. */
+.bottom-dock.is-moving .dock-liquid-indicator{filter:none}
+.bottom-dock.is-dragging .dock-liquid-indicator{filter:url(#liquid-warp)}
+.bottom-dock.is-dragging{cursor:grabbing;user-select:none;-webkit-user-select:none;touch-action:pan-y}
+.bottom-dock.is-dragging .dock-liquid-indicator{transition:none!important}
+.bottom-dock.is-dragging .dock-liquid-indicator:after{opacity:1}
+.bottom-dock.is-dragging a,.bottom-dock.is-dragging button{transition:none;pointer-events:none}
+.bottom-dock .dock-liquid-indicator{will-change:transform,width;contain:layout style}
+/* Do not apply 3D transforms or per-frame viewport filters to content cards. */
+#postGrid>.post-card{perspective:none;filter:none}
+#postGrid>.post-card:hover{transform:none!important}
+html.motion-ready .reveal{filter:none!important;transition:opacity .5s var(--ease-fluid),transform .5s var(--ease-fluid);transform:translateY(10px)}
+html.motion-ready .reveal.is-visible{filter:none!important;transform:translateY(0)}
+@media(max-width:760px){
+  #posts.section{padding-top:52px;padding-bottom:50px}
+  #postGrid>.post-card:first-child:not([hidden]){grid-template-columns:1fr;margin-bottom:12px;border-radius:19px}
+  #postGrid>.post-card:first-child .post-cover{height:205px;min-height:0}
+  #postGrid>.post-card:first-child .post-info{padding:19px 19px 21px}
+  #postGrid>.post-card:first-child .post-info h3{font-size:22px}
+  #postGrid>.post-card:not(:first-child){grid-template-columns:102px minmax(0,1fr);gap:15px;padding:13px 3px}
+  #postGrid>.post-card:not(:first-child) .post-cover{height:78px;border-radius:10px}
+  #postGrid>.post-card:not(:first-child) .post-info h3{font-size:14px;margin:5px 0 3px}
+  #postGrid>.post-card:not(:first-child) .post-info>p{font-size:11px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  #postGrid>.post-card:not(:first-child) .post-meta{font-size:9px}
+  #postGrid>.post-card:not(:first-child) .read-more{display:none}
+  .site-stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:12px}
+  .site-stat:nth-child(3){border-left:0;padding-left:0}
+  .site-stat strong{font-size:19px}
+  .site-stat span{font-size:10px}
+}
+@media(max-width:390px){
+  #postGrid>.post-card:not(:first-child){grid-template-columns:86px minmax(0,1fr);gap:12px}
+  #postGrid>.post-card:not(:first-child) .post-cover{height:72px}
+  .site-stat{padding-inline:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  #postGrid>.post-card,.bottom-dock .dock-liquid-indicator{transition:none!important}
+  .bottom-dock.is-dragging .dock-liquid-indicator{filter:none}
+}
