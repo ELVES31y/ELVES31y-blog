@@ -157,7 +157,7 @@ html.motion-ready .hero-art.glass-card{opacity:1!important;transform:none!import
 .bottom-dock .dock-liquid-indicator>.liquid-glass-shine:before{--lg-rim-lit:var(--glass-rim-alpha,.58);--lg-rim-dark:.14;--lg-rim-fade:11px;--lg-rim-side:5px}
 .bottom-dock .dock-liquid-indicator>.liquid-glass-shine:after{
   content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  box-shadow:inset 1px 0 rgba(127,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,151,201,calc(var(--glass-chroma-alpha,.15) * .72));
+  box-shadow:inset 1px 0 rgba(127,181,255,var(--glass-chroma-alpha,.15)),inset -1px 0 rgba(255,151,201,var(--glass-chroma-pink,.108));
 }
 .bottom-dock .dock-liquid-indicator:after{display:none!important}
 .bottom-dock a.active .dock-label,
