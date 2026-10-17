@@ -3,12 +3,15 @@ const $$ = (s, root=document) => [...root.querySelectorAll(s)];
 $('#year').textContent = new Date().getFullYear();
 const cards = $$('.post-card');
 $('#themeBtn').addEventListener('click', () => {
-  document.body.classList.toggle('light');
-  const light = document.body.classList.contains('light');
-  $('#themeBtn').textContent = light ? '☀' : '☾';
-  localStorage.setItem('elves-theme', light ? 'light' : 'dark');
+  document.body.classList.toggle('dark');
+  const dark = document.body.classList.contains('dark');
+  $('#themeBtn').textContent = dark ? '☀' : '☾';
+  localStorage.setItem('elves-theme', dark ? 'dark' : 'light');
 });
-if (localStorage.getItem('elves-theme') === 'light') { document.body.classList.add('light'); $('#themeBtn').textContent='☀'; }
+if (localStorage.getItem('elves-theme') === 'dark') {
+  document.body.classList.add('dark');
+  $('#themeBtn').textContent = '☀';
+}
 let activeCategory = '全部';
 function filterCards(query='') {
   const q = query.trim().toLowerCase();
