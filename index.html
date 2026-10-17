@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#090b18"><meta name="description" content="ELVES31y的小屋：技术、AI与电脑、生活随笔、游戏与二创。">
-<title>ELVES31y的小屋 — NIGHT BLOG</title><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="upgrade.css"><link rel="stylesheet" href="liquid-glass.css">
+<title>ELVES31y的小屋 — NIGHT BLOG</title><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="upgrade.css"><link rel="stylesheet" href="liquid-glass.css"><link rel="stylesheet" href="bavoice-home.css">
 </head>
 <body>
 
@@ -30,28 +30,46 @@
     <feDisplacementMap in="SourceGraphic" in2="dispMap" scale="0.1" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>
-<header class="site-header wrap glass-chrome"><span class="liquid-glass-effect glass-layer" aria-hidden="true"></span><span class="liquid-glass-tint glass-layer" aria-hidden="true"></span><span class="liquid-glass-shine glass-layer" aria-hidden="true"></span>
-  <a class="brand" href="index.html"><span class="brand-icon">✦</span><span><b>ELVES31y</b><small>的小屋 <em>PERSONAL ARCHIVE</em></small></span></a>
-  <nav id="nav"><a class="selected" href="#home">首页</a><a href="#posts">文章</a><a href="#about">关于</a></nav>
-  <div class="header-tools"><button id="themeBtn" class="round-btn" aria-label="切换主题" title="切换主题">☾</button><button id="glassSettingsBtn" class="round-btn glass-settings-button" aria-label="液态玻璃通透度设置" title="液态玻璃通透度" aria-expanded="false" aria-controls="glassSettingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.2"/><circle cx="15" cy="17" r="2.2"/></svg></button><button id="searchBtn" class="round-btn" aria-label="搜索">⌕</button><button id="menuBtn" class="round-btn menu-btn" aria-label="打开菜单">☰</button></div>
+<header class="site-header wrap glass-chrome bavoice-header"><span class="liquid-glass-effect glass-layer" aria-hidden="true"></span><span class="liquid-glass-tint glass-layer" aria-hidden="true"></span><span class="liquid-glass-shine glass-layer" aria-hidden="true"></span>
+  <a class="brand" href="#home" aria-label="ELVES31y 小屋首页"><span class="brand-icon">E<span>✦</span></span><span><b>ELVES31y</b><small>的小屋 <em>PERSONAL SPACE</em></small></span></a>
+  <nav id="nav" aria-label="主导航"><a class="selected" href="#home">首页</a><a href="#posts">文章</a><a href="#about">关于</a></nav>
+  <div class="header-tools bavoice-tools"><button id="themeBtn" class="round-btn" aria-label="切换主题" title="切换明暗主题">☾</button><button id="searchBtn" class="round-btn" aria-label="搜索文章" title="搜索">⌕</button><button id="qrBtn" class="round-btn" aria-label="查看二维码" title="二维码">▦</button><button id="menuBtn" class="round-btn" aria-label="消息与联系" title="消息与联系">✉</button><button id="glassSettingsBtn" class="round-btn glass-settings-button" aria-label="液态玻璃设置" title="液态玻璃设置" aria-expanded="false" aria-controls="glassSettingsPanel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2.2"/><circle cx="15" cy="17" r="2.2"/></svg></button></div>
 </header>
 <main id="home">
-<section class="hero wrap">
- <div class="hero-text"><div class="overline"><span class="live"></span> WELCOME TO MY UNIVERSE <span class="overline-cn">/ 欢迎来到我的小屋</span></div>
- <h1>在星海之间，<br>收藏每一个<span class="gradient-text">灵感</span><span class="period">。</span></h1>
- <p class="hero-sub">技术与想象力的交汇处。这里记录 AI 与电脑的折腾、日常生活的碎片，还有游戏和二创带来的心动瞬间。</p>
- <div class="hero-cta"><a class="btn btn-primary" href="#posts">探索文章 <span>↗</span></a><a class="btn btn-ghost" href="#about">关于小屋 <span>→</span></a></div>
- <div class="hero-metrics"><div><strong>04</strong><span>精选记录</span></div><i></i><div><strong>04</strong><span>兴趣分类</span></div><i></i><div><strong>∞</strong><span>持续更新</span></div></div>
- </div>
- <div class="hero-art editorial-art" aria-label="简约玻璃质感主视觉">
-  <div class="art-label"><span>PERSONAL ARCHIVE</span><span class="art-status"><i></i> ONLINE</span></div>
-  <div class="editorial-scene">
-    <div class="scene-orb" aria-hidden="true"></div><div class="scene-halo" aria-hidden="true"></div>
-    <div class="scene-copy"><span class="scene-index">FIELD NOTES / 2026</span><strong>Curiosity<br><em>in motion.</em></strong><span class="scene-caption">TECHNOLOGY · LIFE · CREATION</span></div>
-    <div class="scene-glass-chip"><span class="chip-dot"></span> A little space to think</div><span class="scene-coordinate">31°Y<br>EST. 2026</span>
+<section class="bavoice-home wrap" aria-label="小屋快捷首页">
+ <a class="app-banner glass-panel" href="#posts" aria-label="浏览小屋文章">
+  <span class="glass-grain" aria-hidden="true"></span>
+  <span class="banner-copy"><span class="banner-kicker"><i></i> PERSONAL SPACE · 2026</span><strong>在这里，收集<br><em>灵感与热爱。</em></strong><small>技术 · AI · 日常 · 二创</small><span class="banner-link">探索小屋 <b>↗</b></span></span>
+  <span class="banner-art" aria-hidden="true"><span class="banner-orbit orbit-a"></span><span class="banner-orbit orbit-b"></span><span class="banner-glass-shard shard-a"></span><span class="banner-glass-shard shard-b"></span><span class="banner-sphere"></span><span class="banner-mark">E<span>✦</span></span><span class="banner-art-caption">ELVES31y<br>PERSONAL ARCHIVE</span></span>
+  <span class="banner-bottom-line" aria-hidden="true"></span>
+ </a>
+ <section class="welcome-panel glass-panel" aria-labelledby="welcomeTitle">
+  <span class="glass-grain" aria-hidden="true"></span>
+  <span class="welcome-symbol" aria-hidden="true">✦</span>
+  <div class="welcome-copy"><span class="welcome-eyebrow">WELCOME HOME</span><h1 id="welcomeTitle">欢迎来到我的小屋</h1><p>这里记录技术折腾、AI 与电脑、生活片段，还有喜欢的游戏和二创。慢慢看，慢慢逛。</p></div>
+  <a class="welcome-arrow" href="#about" aria-label="了解小屋">↗</a>
+ </section>
+ <section class="launch-section" aria-labelledby="launchTitle">
+  <div class="home-section-heading"><div><span class="micro-label">QUICK ACCESS</span><h2 id="launchTitle">快捷入口</h2></div><span class="heading-count">01 — 08</span></div>
+  <div class="launch-grid">
+   <button class="app-launch" type="button" data-feature-category="技术文章"><span class="launch-icon icon-blue"><svg viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span><span>技术学院</span></button>
+   <a class="app-launch" href="articles/ai-computer.html"><span class="launch-icon icon-violet"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 5.5v15M8 7h8M8 11h6"/></svg></span><span>AI 资源</span></a>
+   <a class="app-launch" href="articles/game-fanwork.html"><span class="launch-icon icon-pink"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 4 4 3-3 4 4"/></svg></span><span>作品图廊</span></a>
+   <a class="app-launch" href="#about"><span class="launch-icon icon-mint"><svg viewBox="0 0 24 24"><path d="M16 20v-1.5a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4V20M9.5 10.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM16 4.2a3.5 3.5 0 0 1 0 6.6M17 14.5a4 4 0 0 1 4 4V20"/></svg></span><span>社区小屋</span></a>
+   <a class="app-launch" href="#qr-contact"><span class="launch-icon icon-amber"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 3z"/><path d="M8 9h8M8 13h5"/></svg></span><span>消息联系</span></a>
+   <a class="app-launch" href="articles/game-fanwork.html"><span class="launch-icon icon-coral"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg></span><span>创作工坊</span></a>
+   <a class="app-launch" href="articles/ai-computer.html"><span class="launch-icon icon-lilac"><svg viewBox="0 0 24 24"><path d="M12 3 14.3 9.7 21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3z"/><path d="m19 2 .8 2.2L22 5l-2.2.8L19 8l-.8-2.2L16 5l2.2-.8z"/></svg></span><span>GPT 实验室</span></a>
+   <a class="app-launch" href="#posts"><span class="launch-icon icon-slate"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="7" cy="6" r=".7"/><circle cx="7" cy="12" r=".7"/><circle cx="7" cy="18" r=".7"/></svg></span><span>更多内容</span></a>
   </div>
-  <div class="art-footer"><span>技术 / 生活 / 灵感</span><span>VOL. 001</span></div>
-</div>
+ </section>
+ <section id="qr-contact" class="qr-section" aria-labelledby="qrTitle">
+  <div class="home-section-heading"><div><span class="micro-label">SAY HELLO</span><h2 id="qrTitle">保持联系</h2></div><span class="heading-note">有空来聊聊</span></div>
+  <div class="qr-grid">
+   <article class="qr-card glass-panel"><span class="glass-grain" aria-hidden="true"></span><div class="qr-copy"><span class="qr-platform">SOCIAL · 01</span><h3>QQ 联系</h3><p>扫码添加 QQ</p><span class="qr-caption">聊技术，也聊日常</span></div><div class="qr-placeholder" aria-label="QQ二维码图片待上传"><span class="qr-corners"></span><span class="qr-glyph">▦</span><small>放置你的<br>QQ 二维码</small></div></article>
+   <article class="qr-card glass-panel"><span class="glass-grain" aria-hidden="true"></span><div class="qr-copy"><span class="qr-platform">SOCIAL · 02</span><h3>微信联系</h3><p>扫码添加微信</p><span class="qr-caption">一起分享有趣的事</span></div><div class="qr-placeholder wechat-qr" aria-label="微信二维码图片待上传"><span class="qr-corners"></span><span class="qr-glyph">▦</span><small>放置你的<br>微信二维码</small></div></article>
+  </div>
+  <p class="qr-footnote">二维码暂为占位区域，上传自己的二维码图片后即可替换。</p>
+ </section>
 </section>
 </div>
 <section id="posts" class="section wrap">
@@ -70,6 +88,6 @@
 <footer class="footer wrap"><a class="footer-brand" href="#home">ELVES31y<span>✦</span></a><p>在星海之间，记录自己的宇宙。</p><div class="footer-right"><a href="#home">返回顶部 ↑</a><span>© <span id="year"></span> ELVES31y的小屋</span></div></footer>
 <div id="glassSettingsPanel" class="glass-settings-panel" role="dialog" aria-labelledby="glassSettingsTitle" aria-describedby="glassSettingsNote" hidden><span class="liquid-glass-effect" aria-hidden="true"></span><span class="liquid-glass-tint" aria-hidden="true"></span><span class="liquid-glass-shine" aria-hidden="true"></span><div class="glass-settings-content"><div class="glass-settings-heading"><div><div id="glassSettingsTitle" class="glass-settings-title">液态玻璃</div><span class="glass-settings-subtitle">LIQUID GLASS · APPEARANCE</span></div><button id="glassSettingsClose" class="glass-settings-close" type="button" aria-label="关闭通透度设置">×</button></div><div class="glass-transparency-line"><label for="glassTransparencyRange">材质通透度</label><output id="glassTransparencyValue" for="glassTransparencyRange">72%</output></div><input id="glassTransparencyRange" class="glass-range" type="range" min="20" max="90" step="1" value="72" aria-label="液态玻璃通透度"><div class="glass-range-labels"><span>实色磨砂</span><span>高通透</span></div><p id="glassSettingsNote" class="glass-settings-note">调节会同步影响导航、文章卡片与设置面板。文字始终保持清晰，不参与材质折射。</p></div></div>
 <div id="searchDialog" class="overlay" hidden><div class="search-dialog" role="dialog" aria-modal="true"><div class="dialog-head"><b>搜索小屋</b><button id="closeSearch" class="round-btn" aria-label="关闭">×</button></div><label class="dialog-input"><span>⌕</span><input id="dialogSearch" placeholder="输入关键词..." type="search"><kbd>ESC</kbd></label><p>支持搜索标题、摘要与分类。</p></div></div>
-<nav id="bottomDock" class="bottom-dock lg-navbar" aria-label="快捷导航"><span class="dock-liquid-indicator liquid-glass lg-macro lg-interactive" aria-hidden="true"><span class="liquid-glass-effect"></span><span class="liquid-glass-tint"></span><span class="liquid-glass-shine"></span></span><a class="active" data-dock-link href="#home"><span class="dock-icon">⌂</span><span class="dock-label">首页</span></a><a data-dock-link href="#posts"><span class="dock-icon">▤</span><span class="dock-label">文章</span></a><button type="button" data-dock-action="categories" aria-label="查看分类"><span class="dock-icon">✧</span><span class="dock-label">分类</span></button><button type="button" data-dock-action="search" aria-label="搜索文章"><span class="dock-icon">⌕</span><span class="dock-label">搜索</span></button><a data-dock-link href="#about"><span class="dock-icon">✦</span><span class="dock-label">关于</span></a></nav>
-<script src="script.js"></script><script src="upgrade.js"></script><script src="glass-controls.js"></script>
+<nav id="bottomDock" class="bottom-dock lg-navbar bavoice-dock" aria-label="底部导航"><span class="dock-liquid-indicator liquid-glass lg-macro lg-interactive" aria-hidden="true"><span class="liquid-glass-effect"></span><span class="liquid-glass-tint"></span><span class="liquid-glass-shine"></span></span><a class="active" data-dock-link href="#home"><span class="dock-icon">⌂</span><span class="dock-label">首页</span></a><a data-dock-link href="#qr-contact"><span class="dock-icon">▦</span><span class="dock-label">资源</span></a><a data-dock-link href="#posts"><span class="dock-icon">☷</span><span class="dock-label">更多</span></a><a data-dock-link href="#about"><span class="dock-icon">◉</span><span class="dock-label">我的</span></a></nav>
+<script src="script.js"></script><script src="upgrade.js"></script><script src="glass-controls.js"></script><script src="bavoice-home.js"></script>
 </body></html>
