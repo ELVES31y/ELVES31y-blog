@@ -2,13 +2,14 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f5f5f7"><meta name="description" content="ELVES31y的小屋：一个简约、安静的个人空间，记录技术、AI、生活和创作。">
+<meta name="theme-color" content="#f5f5f7" id="themeColorMeta"><meta name="description" content="ELVES31y的小屋：一个简约、安静的个人空间，记录技术、AI、生活和创作。">
 <title>ELVES31y 的小屋 — Personal Space</title><link rel="icon" href="assets/favicon.svg"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="upgrade.css">
 </head>
 <body>
-<div class="stars"></div><div class="nebula nebula-a"></div><div class="nebula nebula-b"></div>
+<svg class="fluid-defs" aria-hidden="true" focusable="false"><filter id="liquid-warp" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.018 0.035" numOctaves="1" seed="7" result="fluidNoise"><animate attributeName="baseFrequency" values="0.018 0.035;0.024 0.029;0.018 0.035" dur="8s" repeatCount="indefinite"/></feTurbulence><feDisplacementMap in="SourceGraphic" in2="fluidNoise" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter></svg>
+<div class="stars" aria-hidden="true"></div><div class="nebula nebula-a" aria-hidden="true"></div><div class="nebula nebula-b" aria-hidden="true"></div>
 <header class="site-header wrap">
-  <a class="brand" href="index.html"><span class="brand-icon">✦</span><span><b>ELVES31y</b><small>的小屋 <em>PERSONAL ARCHIVE</em></small></span></a>
+  <a class="brand" href="index.html"><span class="brand-icon">E</span><span><b>ELVES31y</b><small>的小屋 <em>PERSONAL ARCHIVE</em></small></span></a>
   <nav id="nav"><a class="selected" href="#home">首页</a><a href="#posts">文章</a><a href="#about">关于</a></nav>
   <div class="header-tools"><button id="themeBtn" class="round-btn" aria-label="切换主题" title="切换主题">☾</button><button id="searchBtn" class="round-btn" aria-label="搜索">⌕</button><button id="menuBtn" class="round-btn menu-btn" aria-label="打开菜单">☰</button></div>
 </header>
@@ -38,6 +39,13 @@
 </main>
 <footer class="footer wrap"><a class="footer-brand" href="#home">ELVES31y<span>✦</span></a><p>记录好奇，也记录生活。</p><div class="footer-right"><a href="#home">返回顶部 ↑</a><span>© <span id="year"></span> ELVES31y的小屋</span></div></footer>
 <div id="searchDialog" class="overlay" hidden><div class="search-dialog" role="dialog" aria-modal="true"><div class="dialog-head"><b>搜索小屋</b><button id="closeSearch" class="round-btn" aria-label="关闭">×</button></div><label class="dialog-input"><span>⌕</span><input id="dialogSearch" placeholder="输入关键词..." type="search"><kbd>ESC</kbd></label><p>支持搜索标题、摘要与分类。</p></div></div>
-<nav id="bottomDock" class="bottom-dock" aria-label="快捷导航"><a class="active" data-dock-link href="#home"><span class="dock-icon">⌂</span><span class="dock-label">首页</span></a><a data-dock-link href="#posts"><span class="dock-icon">▤</span><span class="dock-label">文章</span></a><button type="button" data-dock-action="categories" aria-label="查看分类"><span class="dock-icon">✧</span><span class="dock-label">分类</span></button><button type="button" data-dock-action="search" aria-label="搜索文章"><span class="dock-icon">⌕</span><span class="dock-label">搜索</span></button><a data-dock-link href="#about"><span class="dock-icon">✦</span><span class="dock-label">关于</span></a></nav>
+<nav id="bottomDock" class="bottom-dock" aria-label="快捷导航">
+<span class="dock-liquid-indicator" aria-hidden="true"></span>
+<a class="active" data-dock-link href="#home" aria-label="首页" aria-current="page"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7"/><path d="M5.5 9v11h13V9M9.5 20v-6h5v6"/></svg><span class="dock-label">首页</span></a>
+<a data-dock-link href="#posts" aria-label="文章"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="dock-label">文章</span></a>
+<button type="button" data-dock-action="categories" aria-label="查看分类"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4" width="7" height="7" rx="2"/><rect x="13.5" y="4" width="7" height="7" rx="2"/><rect x="3.5" y="14" width="7" height="7" rx="2"/><rect x="13.5" y="14" width="7" height="7" rx="2"/></svg><span class="dock-label">分类</span></button>
+<button type="button" data-dock-action="search" aria-label="搜索文章"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m15.5 15.5 5 5"/></svg><span class="dock-label">搜索</span></button>
+<a data-dock-link href="#about" aria-label="关于"><svg class="dock-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5.1.7c0 1.7-2.6 2-2.6 4"/><path d="M12 17.3h.01"/></svg><span class="dock-label">关于</span></a>
+</nav>
 <script src="script.js"></script><script src="upgrade.js"></script>
 </body></html>
