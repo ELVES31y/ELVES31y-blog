@@ -106,7 +106,7 @@
         lastTime:performance.now(), velocity:0, moved:false,
         startControl:control || activeControl, baseWidth:rect.width || (control || activeControl).getBoundingClientRect().width };
       pendingX = event.clientX;
-      try { dock.setPointerCapture(event.pointerId); } catch (_) {}
+      try { (control || lens).setPointerCapture(event.pointerId); } catch (_) {}
     });
     dock.addEventListener('pointermove', event => {
       if (!drag || drag.pointerId !== event.pointerId) return;
@@ -133,7 +133,7 @@
       if (!state.moved || cancelled) {
         dock.classList.remove('is-dragging');
         controls.forEach(item => item.style.pointerEvents = '');
-        if (lens) lens.style.transform = 'translate3d(' + currentTargetX + 'px,0,0) scaleX(1)';
+        moveLens(activeControl, false);
         return;
       }
       suppressClickUntil = performance.now() + 450;
@@ -141,15 +141,15 @@
       controls.forEach(item => item.style.pointerEvents = '');
       dock.classList.remove('is-dragging');
       if (destination.matches('a[data-dock-link]')) {
-        currentSectionControl = destination;
-        placeLens(destination);
+        activeControl = destination;
+        moveLens(destination);
         const href = destination.getAttribute('href');
         if (href && href.startsWith('#')) {
           history.replaceState(null, '', href);
           document.querySelector(href)?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block:'start' });
         }
       } else {
-        placeLens(destination);
+        moveLens(destination);
         if (destination.dataset.dockAction === 'search') $('#searchBtn')?.click();
         if (destination.dataset.dockAction === 'categories') $('#posts')?.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block:'start' });
       }
