@@ -193,33 +193,8 @@
     requestAnimationFrame(() => moveLens(activeControl, false));
   }
 
-  if (finePointer && !reducedMotion) {
-    let pointerFrame = 0;
-    document.addEventListener('pointermove', event => {
-      if (pointerFrame) return;
-      pointerFrame = requestAnimationFrame(() => {
-        document.documentElement.style.setProperty('--pointer-x', (event.clientX / Math.max(1, innerWidth) * 100) + '%');
-        document.documentElement.style.setProperty('--pointer-y', (event.clientY / Math.max(1, innerHeight) * 100) + '%');
-        pointerFrame = 0;
-      });
-    }, { passive: true });
-
-    $$('.post-card').forEach(card => {
-      card.addEventListener('pointermove', event => {
-        const r = card.getBoundingClientRect();
-        const x = (event.clientX - r.left) / r.width;
-        const y = (event.clientY - r.top) / r.height;
-        card.style.setProperty('--shine-x', (x * 100) + '%');
-        card.style.setProperty('--shine-y', (y * 100) + '%');
-        card.style.setProperty('--tilt-x', ((0.5 - y) * 1.25) + 'deg');
-        card.style.setProperty('--tilt-y', ((x - 0.5) * 1.5) + 'deg');
-      }, { passive: true });
-      card.addEventListener('pointerleave', () => {
-        card.style.setProperty('--tilt-x', '0deg');
-        card.style.setProperty('--tilt-y', '0deg');
-      });
-    });
-  }
+  /* No document-wide pointer repaint and no card tilt loop: keep the glass responsive
+     by limiting continuous work to the actively dragged navigation lens. */
 
   if (!reducedMotion && 'IntersectionObserver' in window) {
     const targets = $$('.hero-text,.hero-art,.section-top,.post-controls,.post-card,.about,.site-details-inner');
