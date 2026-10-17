@@ -9,6 +9,7 @@
   const themeMeta = $('#themeColorMeta');
   const syncTheme = () => {
     const dark = document.body.classList.contains('dark');
+    document.documentElement.classList.toggle('dark', dark);
     if (themeButton) {
       themeButton.textContent = dark ? '☀' : '☾';
       themeButton.setAttribute('aria-label', dark ? '切换到浅色外观' : '切换到深色外观');
