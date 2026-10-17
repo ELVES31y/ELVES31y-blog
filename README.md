@@ -239,3 +239,4 @@ wrangler pages dev public
 ```
 
 打开终端提示的地址（默认 `http://localhost:8788`）即可预览。注意：本地环境变量会从 `wrangler.toml` 读取，R2 在本地是模拟的，图片上传在本地不可用，请到线上测试上传。
+提交
