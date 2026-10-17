@@ -96,6 +96,13 @@ body {
   transition: background 0.5s ease, color 0.3s ease;
 }
 
+/* 首页背景图位：和关于页横幅共用同一张 /images/about-bg.jpg。
+   图不在 / 加载失败时自动回落到底下的渐变，不会白屏。 */
+body.page-home {
+  background: url(/images/about-bg.jpg) center/cover no-repeat fixed, var(--bg-body);
+  animation: none;
+}
+
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
@@ -672,4 +679,18 @@ textarea.glass-input { min-height: 120px; resize: vertical; }
   .profile-top h1 { font-size: 1.8rem; }
   .section-card { padding: 28px; }
   .main { padding-top: 96px; }
+}
+
+/* ---------- 图片位（头像 / 二维码） ----------
+   图放在 public/images/ 下，文件名见 HTML。
+   图片不存在时 img 会被隐藏，露出底下的字母/虚线占位，不会出现破图标。 */
+.avatar-inner { position: relative; }
+.avatar-inner img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; border-radius: 50%;
+  object-fit: cover; display: block;
+}
+.qr-box .ph img {
+  width: 100%; height: 100%;
+  object-fit: cover; border-radius: 8px; display: block;
 }
