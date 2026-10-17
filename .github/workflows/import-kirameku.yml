@@ -1,0 +1,34 @@
+name: Import Kirameku upstream exactly
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/import-kirameku.yml
+permissions:
+  contents: write
+jobs:
+  replace-blog-repository:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the target repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Replace tracked contents with upstream Kirameku
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 https://github.com/Xinghongia/Kirameku.git /tmp/Kirameku
+          rsync -a --delete --exclude='.git/' /tmp/Kirameku/ ./
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A -f
+          if git diff --cached --quiet; then
+            echo 'Target tree already matches the upstream snapshot.'
+            exit 0
+          fi
+          git commit -m 'Mirror all Kirameku files including upstream-ignored tracked files'
+          git push origin HEAD:main
