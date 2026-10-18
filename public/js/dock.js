@@ -1,6 +1,6 @@
 /* ============================================================
    dock.js — 底部 dock 交互
-   - 玻璃滑块：静止时是圆形，滑动时沿运动方向拉伸成椭圆（流体形变）
+   - 玻璃滑块：静止是椭圆，滑动时按速度和方向拉伸（拖尾形变）
    - 放大只作用于图标本身，不溢出胶囊
    - 向下滚动或静止 3 秒自动隐藏
    ============================================================ */
@@ -16,28 +16,46 @@
   var BOOST = 0.16;
   var DISP = 0.8;
 
-  // ---------- 玻璃滑块（圆形 ↔ 椭圆） ----------
+  // ---------- 玻璃滑块：静止椭圆，滑动时按方向拉长 ----------
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
-  var SIZE = 44; // 圆形直径，需与 CSS 中 .dock-indicator 的宽高一致
+  var SIZE = 76; // 与 CSS 中 .dock-indicator 的宽度一致
+
+  function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
   function placeInd(el, smooth) {
     if (!ind || !el) return;
     var dr = dock.getBoundingClientRect();
     var r = el.getBoundingClientRect();
-    if (!smooth) ind.style.transition = "none";
-    ind.style.left = (r.left - dr.left + r.width / 2 - SIZE / 2) + "px";
+    var newLeft = r.left - dr.left + r.width / 2 - SIZE / 2;
+    var oldLeft = parseFloat(ind.style.left || "0") || 0;
+
     if (!smooth) {
+      ind.style.transition = "none";
+      ind.style.transformOrigin = "center center";
+      ind.style.transform = restTransform();
+      ind.style.left = newLeft + "px";
       void ind.offsetWidth;
       ind.style.transition = "";
+      return;
     }
-    if (smooth) {
-      // 滑动过程中像水滴被拉长，停下后回弹成圆
-      ind.classList.add("is-moving");
-      clearTimeout(indTimer);
-      indTimer = setTimeout(function () { ind.classList.remove("is-moving"); }, 620);
-    }
+
+    var dx = newLeft - oldLeft;
+    var dist = Math.abs(dx);
+    // 位移越大拉得越长；拉伸方向永远朝向运动方向（尾巴拖在后面）
+    var sx = 1 + Math.min(0.55, dist / 240);
+    var sy = 1 - Math.min(0.18, dist / 800);
+
+    ind.style.transformOrigin = dx >= 0 ? "left center" : "right center";
+    ind.style.transform = "translateY(-50%) scaleX(" + sx.toFixed(3) + ") scaleY(" + sy.toFixed(3) + ")";
+    ind.style.left = newLeft + "px";
+
+    clearTimeout(indTimer);
+    indTimer = setTimeout(function () {
+      ind.style.transformOrigin = "center center";
+      ind.style.transform = restTransform();
+    }, 560);
   }
 
   var curIdx = items.indexOf(activeEl);
@@ -46,7 +64,7 @@
   try { localStorage.setItem("dock_prev", String(curIdx)); } catch (e) {}
 
   if (prevIdx >= 0 && prevIdx !== curIdx && items[prevIdx]) {
-    placeInd(items[prevIdx], false);          // 先站到上一页的位置（圆形）
+    placeInd(items[prevIdx], false);          // 先站到上一页位置
     requestAnimationFrame(function () {
       requestAnimationFrame(function () { placeInd(activeEl, true); }); // 拉长着滑过去
     });
