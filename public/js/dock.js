@@ -42,9 +42,9 @@
     if (!ind || !el || !dockInner) return;
     var ir = dockInner.getBoundingClientRect();
     var r = el.getBoundingClientRect();
-    var w = r.width + 6;
-    var h = r.height + 4;
-    var newLeft = r.left - ir.left - 3;
+    var w = r.width + 8;
+    var h = r.height + 8;
+    var newLeft = r.left - ir.left - 4;
     var oldLeft = parseFloat(ind.style.left || "0") || 0;
 
     ind.style.width = w + "px";

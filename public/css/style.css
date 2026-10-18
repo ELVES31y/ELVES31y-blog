@@ -885,3 +885,12 @@ body { padding-bottom: 92px; }
   html body .fx-player { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); right: 10px; }
   body .main { padding-top: 14px; }
 }
+
+/* tighter + fuller dock spacing */
+.dock { padding: 6px 8px; }
+.dock-inner { gap: 0; }
+.dock-item { padding: 6px 4px 4px; }
+@media (max-width: 520px) {
+  .dock { padding: 5px 6px; }
+  .dock-item { padding: 5px 2px 3px; }
+}
