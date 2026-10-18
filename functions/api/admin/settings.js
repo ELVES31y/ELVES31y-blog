@@ -10,7 +10,11 @@ export async function onRequestGet({ env, request }) {
 
   const rows = await env.DB.prepare("SELECT key, value FROM settings").all();
   const map = {};
-  for (const r of rows.results) map[r.key] = r.value;
+  for (const r of rows.results) {
+    // 密码哈希和盐不下发到前端
+    if (r.key === "admin_hash" || r.key === "admin_salt") continue;
+    map[r.key] = r.value;
+  }
   return json(map);
 }
 
