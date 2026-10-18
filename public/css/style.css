@@ -723,7 +723,7 @@ body { padding-bottom: 92px; }
 
 .dock {
   position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 60;
-  padding: 6px; border-radius: 999px;
+  padding: 10px; border-radius: 999px;
   background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,.26));
   -webkit-backdrop-filter: blur(22px) saturate(180%);
   backdrop-filter: blur(22px) saturate(180%);
@@ -785,6 +785,10 @@ body { padding-bottom: 92px; }
 .dock-item span {
   text-shadow: calc(var(--disp, 0) * 1px) 0 rgba(255,60,120,.75), calc(var(--disp, 0) * -1px) 0 rgba(60,200,255,.75);
 }
-@keyframes dockPop { 0% { transform: scale(1) rotate(0); } 45% { transform: scale(1.22) rotate(-7deg); } 100% { transform: scale(1) rotate(0); } }
+@keyframes dockPop { 0% { transform: scale(1) rotate(0); } 45% { transform: scale(1.08) rotate(-3deg); } 100% { transform: scale(1) rotate(0); } }
 .dock-item.active svg { animation: dockBreathe 2.6s ease-in-out infinite; }
-@keyframes dockBreathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes dockBreathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
+
+/* dock: fixed position + auto hide */
+.dock { transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .32s; }
+.dock.is-hidden { transform: translateX(-50%) translateY(160%); opacity: 0; pointer-events: none; }
