@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    dock.js — 底部 dock 交互
    - 玻璃滑块：静止是椭圆，滑动时按速度和方向拉伸（拖尾形变）
    - 放大只作用于图标本身，不溢出胶囊
@@ -11,6 +11,9 @@
 
   var items = Array.prototype.slice.call(dock.querySelectorAll(".dock-item"));
   if (!items.length) return;
+
+  // 给每个图标分配一种 hover 动画
+  for (var j = 0; j < items.length; j++) items[j].setAttribute("data-fx", String(j % 4));
 
   var REACH = 84;
   var BOOST = 0.16;
