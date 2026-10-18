@@ -34,11 +34,18 @@
     ".fx-player{position:fixed;right:14px;bottom:14px;z-index:9000;display:flex;align-items:center;gap:8px;padding:7px 12px 7px 8px;border-radius:999px;background:rgba(255,255,255,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55);box-shadow:0 8px 24px rgba(0,0,0,.15);font-size:.78rem;color:#0f172a;transition:transform .25s,box-shadow .25s}",
     ".fx-player:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.2)}",
     "[data-theme='dark'] .fx-player{background:rgba(15,23,42,.62);border-color:rgba(255,255,255,.12);color:#e2e8f0}",
-    ".fx-p-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 2px 8px rgba(99,102,241,.4)}",
-    ".fx-p-meta{display:flex;flex-direction:column;line-height:1.25;max-width:132px;overflow:hidden}",
+    ".fx-player-card{position:static;width:100%;box-sizing:border-box;flex-wrap:wrap;gap:10px;padding:12px;border-radius:14px;background:rgba(255,255,255,.35);box-shadow:none}",
+    ".fx-player-card:hover{transform:none;box-shadow:none}",
+    "[data-theme='dark'] .fx-player-card{background:rgba(15,23,42,.35)}",
+    ".fx-p-cover{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#a855f7) center/cover no-repeat;flex-shrink:0}",
+    ".fx-player:not(.fx-player-card) .fx-p-cover{display:none}",
+    ".fx-p-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 2px 8px rgba(99,102,241,.4);flex-shrink:0}",
+    ".fx-p-meta{display:flex;flex-direction:column;line-height:1.25;min-width:0;flex:1;overflow:hidden}",
     ".fx-p-meta b{font-weight:600;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
     ".fx-p-meta span{opacity:.6;font-size:.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
-    ".fx-p-more{opacity:.5;text-decoration:none;font-size:14px;color:inherit}",
+    ".fx-p-bar{height:3px;border-radius:3px;background:rgba(148,163,184,.25);overflow:hidden;flex-basis:100%}",
+    ".fx-player:not(.fx-player-card) .fx-p-bar{display:none}",
+    ".fx-p-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6366f1,#a855f7);transition:width .25s linear}",
     "@keyframes fxspin{to{transform:rotate(360deg)}}",
     "@keyframes fxpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.6);opacity:.5}}",
     "@media (max-width:768px){#fx-cursor-dot,#fx-cursor-ring{display:none}}"
@@ -256,33 +263,45 @@
     updateBar();
   }
 
-  // ---------------- 悬浮音乐播放器（自动播放 / 小音量） ----------------
+  // ---------------- 音乐播放器（首页卡片 / 其他页面悬浮，进页面即播） ----------------
   (function initPlayer() {
     var audio = new Audio();
     audio.loop = true;
     audio.volume = 0.18;
     audio.preload = "auto";
 
+    var slot = document.getElementById("home-music-slot");
     var wrap = document.createElement("div");
     wrap.id = "fx-player";
-    wrap.className = "fx-player";
+    wrap.className = "fx-player" + (slot ? " fx-player-card" : "");
     wrap.innerHTML =
+      '<div class="fx-p-cover"></div>' +
       '<button class="fx-p-btn" type="button" aria-label="播放/暂停">\u25B6</button>' +
       '<div class="fx-p-meta"><b>音乐</b><span>加载中…</span></div>' +
-      '<a class="fx-p-more" href="/music.html" title="音乐页">\u266A</a>';
-    document.body.appendChild(wrap);
+      '<div class="fx-p-bar"><i></i></div>';
+    if (slot) { slot.appendChild(wrap); } else { document.body.appendChild(wrap); }
 
     var btn = wrap.querySelector(".fx-p-btn");
     var tEl = wrap.querySelector(".fx-p-meta b");
     var aEl = wrap.querySelector(".fx-p-meta span");
+    var bar = wrap.querySelector(".fx-p-bar i");
+    var cover = wrap.querySelector(".fx-p-cover");
+
+    function setPlaying(on) { btn.textContent = on ? "\u275A\u275A" : "\u25B6"; }
 
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
+      if (audio.muted) audio.muted = false;
       if (audio.paused) { audio.play().catch(function () {}); }
       else { audio.pause(); }
     });
-    audio.addEventListener("play", function () { btn.textContent = "\u275A\u275A"; });
-    audio.addEventListener("pause", function () { btn.textContent = "\u25B6"; });
+    // 卡片模式下点整块也能恢复声音
+    wrap.addEventListener("click", function () { if (audio.muted) audio.muted = false; });
+    audio.addEventListener("play", function () { setPlaying(true); });
+    audio.addEventListener("pause", function () { setPlaying(false); });
+    audio.addEventListener("timeupdate", function () {
+      if (audio.duration) bar.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+    });
 
     fetch("/api/music")
       .then(function (r) { return r.json(); })
@@ -293,19 +312,27 @@
         audio.src = t.url;
         tEl.textContent = t.name || "音乐";
         aEl.textContent = t.artist || "";
+        if (t.cover && cover) cover.style.backgroundImage = "url(" + t.cover + ")";
+
         // 后台关掉"自动播放"时，不主动出声
         if (d.autoplay === false) {
           aEl.textContent = (t.artist ? t.artist + " · " : "") + "点 ▶ 播放";
           return;
         }
+
         var p = audio.play();
         if (p && p.catch) {
           p.catch(function () {
-            // 浏览器拦截自动播放 → 用户第一次交互时再开始
-            aEl.textContent = "点一下页面开始播放";
-            var once = function () { audio.play().catch(function () {}); };
-            document.addEventListener("click", once, { once: true });
-            document.addEventListener("keydown", once, { once: true });
+            // 浏览器拦自动播放 → 先静音续播，保证"进页面就在放"，点一下就出声
+            audio.muted = true;
+            var mp = audio.play();
+            if (mp && mp.then) {
+              mp.then(function () {
+                aEl.textContent = "已静音 · 点击播放器出声";
+              }).catch(function () {
+                aEl.textContent = (t.artist ? t.artist + " · " : "") + "点 ▶ 播放";
+              });
+            }
           });
         }
       })
