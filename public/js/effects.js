@@ -268,7 +268,8 @@
   (function initPlayer() {
     var audio = new Audio();
     audio.loop = true;
-    audio.volume = 0.18;
+    audio.volume = 0;
+    var TARGET_VOL = 0.1;
     audio.preload = "auto";
 
     var slot = document.getElementById("home-music-slot");
@@ -288,6 +289,29 @@
     var bar = wrap.querySelector(".fx-p-bar i");
     var cover = wrap.querySelector(".fx-p-cover");
 
+    // fade in / fade out so playback never starts or stops abruptly
+    function fadeTo(target, ms, done) {
+      var from = audio.volume;
+      var start = performance.now();
+      function step(now) {
+        var k = Math.min(1, (now - start) / ms);
+        audio.volume = Math.max(0, Math.min(1, from + (target - from) * k));
+        if (k < 1) requestAnimationFrame(step);
+        else if (done) done();
+      }
+      requestAnimationFrame(step);
+    }
+    function startPlay() {
+      if (!audio.paused) return;
+      audio.volume = 0;
+      var p = audio.play();
+      if (p && p.then) p.then(function () { fadeTo(TARGET_VOL, 900); }).catch(function () {});
+    }
+    function stopPlay() {
+      if (audio.paused) return;
+      fadeTo(0, 320, function () { audio.pause(); });
+    }
+
     // 切换到后台/其他 App 时立即暂停，不在后台继续播放
     document.addEventListener("visibilitychange", function () {
       if (document.hidden && !audio.paused) audio.pause();
@@ -298,8 +322,7 @@
     btn.addEventListener("click", function (e) {
       e.stopPropagation();
       if (audio.muted) audio.muted = false;
-      if (audio.paused) { audio.play().catch(function () {}); }
-      else { audio.pause(); }
+      if (audio.paused) startPlay(); else stopPlay();
     });
     // 卡片模式下点整块也能恢复声音
     wrap.addEventListener("click", function () { if (audio.muted) audio.muted = false; });
@@ -326,7 +349,9 @@
           return;
         }
 
+        audio.volume = 0;
         var p = audio.play();
+        if (p && p.then) p.then(function () { fadeTo(TARGET_VOL, 1100); });
         if (p && p.catch) {
           p.catch(function () {
             // 浏览器拦自动播放 → 先静音续播，保证"进页面就在放"，点一下就出声
