@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    dock.js — 底部 dock 交互（涟漪形变版）
    1) 玻璃滑块跟随当前页，切换页面时椭圆拉伸滑过去
    2) 悬浮/触摸：被指到的图标弹性放大上浮，左右相邻图标被挤开（涟漪）
@@ -41,7 +41,7 @@
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
-  var SIZE = 76;
+  var SIZE = 84;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
