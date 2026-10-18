@@ -971,3 +971,10 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .status-item { padding: 8px 10px; }
   .status-item .v { font-size: .9rem; }
 }
+
+/* real fix: grid children default min-width:auto, they get blown up by long text */
+html, body { overflow-x: clip; }
+.home-grid > *, .post-grid > *, .mini-posts > *, .status-grid > *, .moment-col > *, .posts-col > * { min-width: 0; }
+.section-card, .glass-card, .container, .container-narrow, .container-xs { max-width: 100%; }
+.status-item { min-width: 0; }
+.status-item .v { word-break: break-word; }
