@@ -875,3 +875,13 @@ body { padding-bottom: 92px; }
 
 /* dock: never clip the icon animations */
 .dock, .dock-inner { overflow: visible; }
+
+/* ---------- mobile adaptation (must stay last) ---------- */
+@media (max-width: 520px) {
+  .dock { padding: 8px 6px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .dock-item { width: 44px; padding: 6px 2px 4px; font-size: .55rem; gap: 2px; }
+  .dock-item svg { width: 18px; height: 18px; }
+  body { padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+  html body .fx-player { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); right: 10px; }
+  body .main { padding-top: 14px; }
+}
