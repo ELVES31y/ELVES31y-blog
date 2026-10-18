@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    common.js — 全站共用：导航栏、页脚、主题切换、小工具
    每个页面在 <head> 里引入本文件，并在 body 放好
    <div id="navbar"></div> 和 <div id="site-footer"></div>
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 交互动画层（点击粒子 / 鼠标拖尾 / 光标环 / 页面切换 / 阅读进度）
   if (!document.getElementById("fx-canvas")) {
     const fx = document.createElement("script");
-    fx.src = "/js/effects.js?v=4";
+    fx.src = "/js/effects.js?v=5";
     fx.async = true;
     document.body.appendChild(fx);
   }
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dock") && !window.__dockLoaded) {
     window.__dockLoaded = true;
     const dk = document.createElement("script");
-    dk.src = "/js/dock.js?v=1";
+    dk.src = "/js/dock.js?v=2";
     document.body.appendChild(dk);
   }
 });

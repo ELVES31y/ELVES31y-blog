@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    effects.js — 交互动画层（原生实现，参考 Kirameku 的交互设计）
    包含：点击粒子 / 鼠标拖尾 / 光标环 / 页面切换遮罩 / 阅读进度 / 卡片 3D 倾斜
    全部自动挂载，不依赖任何库；尊重系统「减少动态效果」设置。
@@ -107,7 +107,7 @@
 
   // 点击迸发
   document.addEventListener("click", function (e) {
-    if (e.target.closest("input,textarea,select")) return;
+    if (e.target.closest("input,textarea,select,.dock")) return;
     var n = 8 + Math.floor(Math.random() * 6);
     for (var i = 0; i < n; i++) {
       var ang = (Math.PI * 2 * i) / n + (Math.random() - 0.5) * 0.5;
@@ -127,6 +127,7 @@
   if (fine) {
     var lastMove = 0;
     window.addEventListener("mousemove", function (e) {
+      if (e.target.closest && e.target.closest(".dock")) return;
       var now = performance.now();
       if (now - lastMove < 16) return;
       lastMove = now;

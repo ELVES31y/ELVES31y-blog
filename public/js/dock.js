@@ -1,9 +1,7 @@
 /* ============================================================
-   dock.js — 底部固定 dock 的交互（小而克制的液态效果）
-   - 放大镜：指针附近图标轻微放大抬升（幅度限制在胶囊内）
-   - 色散：强度随距离变化
-   - 高光：跟随指针的光斑
-   - 自动隐藏：向下滚动时缩到屏幕下方，向上滚动或指针移到底部时出现
+   dock.js — 底部 dock 交互（克制版）
+   放大只作用于图标本身（不改变按钮盒子），所以永远不会溢出胶囊；
+   色散/高光跟随指针；向下滚动自动隐藏。
    ============================================================ */
 (function () {
   "use strict";
@@ -13,15 +11,13 @@
   var items = Array.prototype.slice.call(dock.querySelectorAll(".dock-item"));
   if (!items.length) return;
 
-  var REACH = 88;        // 放大影响半径
-  var LIFT = 3;          // 最大上浮
-  var SCALE = 0.16;      // 最大额外缩放
-  var DISP = 0.9;        // 最大色散位移(px)
+  var REACH = 84;   // 影响半径
+  var BOOST = 0.16; // 图标最大额外缩放
+  var DISP = 0.8;   // 最大色散位移 px
 
   function reset() {
     for (var i = 0; i < items.length; i++) {
-      items[i].style.transform = "";
-      items[i].style.zIndex = "";
+      items[i].style.removeProperty("--boost");
       items[i].style.removeProperty("--disp");
     }
     dock.style.setProperty("--glow", "0");
@@ -39,8 +35,7 @@
       var d = Math.abs(e.clientX - cx);
       var t = Math.max(0, 1 - d / REACH);
       t = t * t;
-      it.style.transform = "translateY(" + (-t * LIFT).toFixed(2) + "px) scale(" + (1 + t * SCALE).toFixed(3) + ")";
-      it.style.zIndex = String(20 + Math.round(t * 10));
+      it.style.setProperty("--boost", (t * BOOST).toFixed(3));
       it.style.setProperty("--disp", (t * DISP).toFixed(2));
     }
   }, { passive: true });
@@ -60,7 +55,6 @@
     lastY = y;
   }, { passive: true });
 
-  // 指针靠近屏幕底部时露出来
   window.addEventListener("mousemove", function (e) {
     if (e.clientY > window.innerHeight - 70) show();
   }, { passive: true });

@@ -747,7 +747,7 @@ body { padding-bottom: 92px; }
   transition: transform .25s cubic-bezier(.2,.8,.2,1), color .2s, background .25s;
 }
 .dock-item svg { width: 19px; height: 19px; transition: transform .25s, filter .25s; }
-.dock-item:hover { color: var(--text-1); transform: translateY(-3px) scale(1.06); background: rgba(255,255,255,.22); }
+.dock-item:hover { color: var(--text-1); }
 [data-theme="dark"] .dock-item:hover { background: rgba(255,255,255,.08); }
 .dock-item:hover svg { animation: dockPop .5s cubic-bezier(.2,.9,.2,1); }
 .dock-item.active { color: var(--primary); background: rgba(255,255,255,.34); }
@@ -792,3 +792,7 @@ body { padding-bottom: 92px; }
 /* dock: fixed position + auto hide */
 .dock { transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .32s; }
 .dock.is-hidden { transform: translateX(-50%) translateY(160%); opacity: 0; pointer-events: none; }
+
+/* dock: icon-only magnification, keeps everything inside the pill */
+.dock-item svg { transform: scale(calc(1 + var(--boost, 0))); transform-origin: center center; transition: transform .16s ease-out, filter .16s; }
+.dock-item:hover svg { animation: none; }
