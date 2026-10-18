@@ -293,6 +293,11 @@
         audio.src = t.url;
         tEl.textContent = t.name || "音乐";
         aEl.textContent = t.artist || "";
+        // 后台关掉"自动播放"时，不主动出声
+        if (d.autoplay === false) {
+          aEl.textContent = (t.artist ? t.artist + " · " : "") + "点 ▶ 播放";
+          return;
+        }
         var p = audio.play();
         if (p && p.catch) {
           p.catch(function () {

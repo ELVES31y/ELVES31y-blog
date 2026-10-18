@@ -412,6 +412,11 @@ async function loadPhotos() {
 async function renderMusic(panel) {
   panel.innerHTML = `
     <h2 style="font-size:1.1rem;margin-bottom:16px">音乐管理</h2>
+    <div class="form-group" style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:var(--primary-soft)">
+      <input type="checkbox" id="mu-autoplay" style="width:18px;height:18px;cursor:pointer">
+      <label for="mu-autoplay" style="margin:0;cursor:pointer;font-weight:600">进入网站自动播放音乐</label>
+      <span id="mu-autoplay-state" style="margin-left:auto;font-size:.75rem;color:var(--text-3)"></span>
+    </div>
     <div class="form-group"><label>歌曲名 *</label><input class="glass-input" id="mu-title"></div>
     <div class="form-row two">
       <div class="form-group"><label>歌手</label><input class="glass-input" id="mu-artist"></div>
@@ -441,6 +446,29 @@ async function renderMusic(panel) {
       renderMusic(panel);
     } catch (e) { toast(e.message, "error"); }
   });
+
+  // 自动播放开关：读写 D1 settings 表
+  const apBox = document.getElementById("mu-autoplay");
+  const apState = document.getElementById("mu-autoplay-state");
+  try {
+    const s = await api("/admin/settings");
+    const on = s.autoplay !== "0";
+    apBox.checked = on;
+    apState.textContent = on ? "已开启" : "已关闭";
+  } catch (e) {
+    apState.textContent = "读取失败：" + e.message;
+  }
+  apBox.addEventListener("change", async () => {
+    try {
+      await api("/admin/settings", { method: "POST", body: { key: "autoplay", value: apBox.checked ? "1" : "0" } });
+      apState.textContent = apBox.checked ? "已开启" : "已关闭";
+      toast(apBox.checked ? "已开启自动播放" : "已关闭自动播放", "success");
+    } catch (e) {
+      apBox.checked = !apBox.checked;
+      toast(e.message, "error");
+    }
+  });
+
   loadMusic();
 }
 
@@ -454,10 +482,23 @@ async function loadMusic() {
       ${r.items.map((t) => `
         <tr>
           <td>${esc(t.title)} - ${esc(t.artist || "未知")}</td>
+          <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.72rem;color:var(--text-3)">${esc(t.url || "")}</td>
           <td>${fmtDate(t.created_at)}</td>
-          <td class="actions"><button class="mini-btn danger" data-del="${t.id}">删除</button></td>
+          <td class="actions">
+            <button class="mini-btn" data-play="${esc(t.url || "")}">试听</button>
+            <button class="mini-btn danger" data-del="${t.id}">删除</button>
+          </td>
         </tr>`).join("")}
       </tbody></table>`;
+    let trial = null;
+    list.querySelectorAll("[data-play]").forEach((b) =>
+      b.addEventListener("click", () => {
+        if (trial) { trial.pause(); trial = null; }
+        if (!b.dataset.play) return toast("这首歌没有地址", "error");
+        trial = new Audio(b.dataset.play);
+        trial.volume = 0.35;
+        trial.play().catch(() => toast("播放失败，检查直链是否可访问", "error"));
+      }));
     list.querySelectorAll("[data-del]").forEach((b) =>
       b.addEventListener("click", async () => {
         if (!confirm("确定删除这首歌？")) return;
