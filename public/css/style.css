@@ -828,14 +828,14 @@ body { padding-bottom: 92px; }
 .dock-item { transition: transform .26s cubic-bezier(.34,1.6,.64,1), color .2s, background .25s; will-change: transform; }
 
 /* dock: bigger, fuller, squircle (cubic-bezier-like) corners */
-.dock { padding: 12px; border-radius: 30px; corner-shape: squircle; }
+.dock { padding: 12px; border-radius: 999px; }
 .dock-item { width: 68px; padding: 10px 6px 8px; font-size: .66rem; gap: 3px; justify-content: center; }
 .dock-item svg { width: 22px; height: 22px; }
 .dock-indicator { width: 84px; height: 50px; }
 .dock-inner { align-items: center; }
 
 /* dock: capsule shape + fuller, centered slider */
-.dock { border-radius: 999px; corner-shape: normal; padding: 10px 12px; }
+.dock { border-radius: 999px; padding: 10px 12px; overflow: visible; }
 .dock-item { width: 64px; padding: 8px 6px 6px; }
 .dock-indicator { width: 80px; height: 48px; border-radius: 999px; top: 50%; transform: translateY(-50%); }
 
@@ -857,3 +857,6 @@ body { padding-bottom: 92px; }
   background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,0) 55%);
   opacity: calc(var(--glow, 0) * .5); transition: opacity .25s;
 }
+
+/* dock: keep animations above (canvas/cursor/overlay already higher) */
+.dock { z-index: 70; }
