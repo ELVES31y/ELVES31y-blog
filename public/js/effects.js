@@ -150,17 +150,26 @@
     document.body.appendChild(dot);
     document.body.appendChild(ring);
     var mx = -100, my = -100, rx = -100, ry = -100;
+    var ringRunning = false;
+    function ringLoop() {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      ring.style.transform = "translate(" + rx.toFixed(1) + "px," + ry.toFixed(1) + "px) translate(-50%,-50%)";
+      if (Math.abs(mx - rx) > 0.4 || Math.abs(my - ry) > 0.4) {
+        requestAnimationFrame(ringLoop);
+      } else {
+        ringRunning = false;
+      }
+    }
     window.addEventListener("mousemove", function (e) {
       mx = e.clientX;
       my = e.clientY;
       dot.style.transform = "translate(" + mx + "px," + my + "px) translate(-50%,-50%)";
+      if (!ringRunning) {
+        ringRunning = true;
+        requestAnimationFrame(ringLoop);
+      }
     }, { passive: true });
-    (function ringLoop() {
-      rx += (mx - rx) * 0.15;
-      ry += (my - ry) * 0.15;
-      ring.style.transform = "translate(" + rx + "px," + ry + "px) translate(-50%,-50%)";
-      requestAnimationFrame(ringLoop);
-    })();
     var HOT = "a,button,input,textarea,select,[role='button'],.post-card,.photo-card,.moment-card,.hero-post";
     document.addEventListener("mouseover", function (e) {
       if (e.target.closest && e.target.closest(HOT)) ring.classList.add("hot");
@@ -173,22 +182,25 @@
   // ---------------- 卡片 3D 倾斜 ----------------
   if (fine) {
     var tiltSel = ".post-card,.hero-post,.mini-post";
-    var cur = null, rafT = 0, pt = { x: 0, y: 0 };
+    var cur = null, curRect = null, rafT = 0, pt = { x: 0, y: 0 };
     function applyTilt() {
-      if (!cur) return;
-      var r = cur.getBoundingClientRect();
-      var px = (pt.x - r.left) / r.width - 0.5;
-      var py = (pt.y - r.top) / r.height - 0.5;
+      if (!cur || !curRect) return;
+      var px = (pt.x - curRect.left) / curRect.width - 0.5;
+      var py = (pt.y - curRect.top) / curRect.height - 0.5;
       cur.style.transform = "perspective(800px) rotateX(" + (-py * 6).toFixed(2) + "deg) rotateY(" + (px * 6).toFixed(2) + "deg)";
     }
     document.addEventListener("mousemove", function (e) {
       var card = e.target.closest && e.target.closest(tiltSel);
-      if (!card) { if (cur) { cur.style.transform = ""; cur = null; } return; }
-      cur = card;
+      if (!card) {
+        if (cur) { cur.style.transform = ""; cur = null; curRect = null; }
+        return;
+      }
+      if (card !== cur || !curRect) { cur = card; curRect = card.getBoundingClientRect(); }
       pt.x = e.clientX;
       pt.y = e.clientY;
       if (!rafT) rafT = requestAnimationFrame(function () { rafT = 0; applyTilt(); });
     }, { passive: true });
+    window.addEventListener("scroll", function () { curRect = null; }, { passive: true });
     document.addEventListener("mouseout", function (e) {
       if (cur && (!e.relatedTarget || !cur.contains(e.relatedTarget))) {
         cur.style.transform = "";

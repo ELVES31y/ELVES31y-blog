@@ -96,7 +96,7 @@ body {
   transition: background 0.5s ease, color 0.3s ease;
 }
 
-/* 全站背景图位：/images/home-bg.png（所有页面统一；关于页横幅另用 about-bg.jpg）。
+/* 全站背景图位：/images/home-bg.jpg（所有页面统一；关于页横幅另用 about-bg.jpg）。
    图不在 / 加载失败时自动回落到底下的渐变，不会白屏。 */
 html { background: var(--bg-body) fixed; }
 body { background: transparent; }
@@ -107,8 +107,9 @@ body::before {
   inset: -24px;
   z-index: -1;
   pointer-events: none;
-  background: url(/images/home-bg.png) center/cover no-repeat;
+  background: url(/images/home-bg.jpg) center/cover no-repeat;
   filter: blur(16px) saturate(1.12);
+  transform: translateZ(0);
 }
 
 a { color: inherit; text-decoration: none; }
