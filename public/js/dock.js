@@ -41,7 +41,7 @@
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
-  var SIZE = 84;
+  var SIZE = 80;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
