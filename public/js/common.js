@@ -153,6 +153,7 @@ function renderNavbar() {
   mount.innerHTML = `
     <nav class="dock" aria-label="站点导航">
       <div class="dock-inner">
+        <span class="dock-indicator" aria-hidden="true"></span>
         ${links}
         <button class="dock-item dock-theme" id="theme-toggle" title="切换主题">${theme === "dark" ? ICONS.sun : ICONS.moon}<span>主题</span></button>
       </div>
@@ -197,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dock") && !window.__dockLoaded) {
     window.__dockLoaded = true;
     const dk = document.createElement("script");
-    dk.src = "/js/dock.js?v=3";
+    dk.src = "/js/dock.js?v=4";
     document.body.appendChild(dk);
   }
 });
