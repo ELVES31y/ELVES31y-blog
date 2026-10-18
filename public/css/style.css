@@ -998,3 +998,7 @@ a:focus-visible, button:focus-visible, [role="button"]:focus {
   .top-actions { top: 12px; right: 12px; }
   .ta-btn { width: 40px; height: 40px; border-radius: 50%; }
 }
+
+/* top-right actions fade out while scrolling */
+.top-actions { transition: opacity .28s ease, transform .28s ease; }
+.top-actions.is-dim { opacity: 0; transform: translateY(-10px); pointer-events: none; }

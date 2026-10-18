@@ -195,6 +195,16 @@ document.addEventListener("DOMContentLoaded", () => {
     el.innerHTML = ICONS[el.dataset.icon] || "";
   });
   // 右上角主题按钮
+  // hide the top-right actions while scrolling so they never cover content
+  const taWrap = document.querySelector(".top-actions");
+  if (taWrap) {
+    let taTimer = 0;
+    window.addEventListener("scroll", () => {
+      taWrap.classList.add("is-dim");
+      clearTimeout(taTimer);
+      taTimer = setTimeout(() => taWrap.classList.remove("is-dim"), 650);
+    }, { passive: true });
+  }
   syncThemeButtons();
   document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
     btn.addEventListener("click", () => { toggleTheme(); syncThemeButtons(); });
