@@ -790,8 +790,13 @@ body { padding-bottom: 92px; }
 @keyframes dockBreathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1px); } }
 
 /* dock: fixed position + auto hide */
-.dock { transition: transform .32s cubic-bezier(.2,.9,.2,1), opacity .32s; }
-.dock.is-hidden { transform: translateX(-50%) translateY(160%); opacity: 0; pointer-events: none; }
+.dock { transition: transform .46s cubic-bezier(.16,1,.3,1), opacity .34s ease; }
+.dock.is-hidden {
+  transform: translateX(-50%) translateY(230%) scale(.97);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .66s cubic-bezier(.45,0,.25,1), opacity .46s ease .08s;
+}
 
 /* dock: icon-only magnification, keeps everything inside the pill */
 .dock-item svg { transform: scale(calc(1 + var(--boost, 0))); transform-origin: center center; transition: transform .16s ease-out, filter .16s; }
