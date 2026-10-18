@@ -712,3 +712,65 @@ textarea.glass-input { min-height: 120px; resize: vertical; }
 .status-item .k { font-size: .68rem; letter-spacing: .08em; color: var(--text-3); text-transform: uppercase; }
 .status-item .v { font-size: 1.02rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text-1); }
 @media (min-width: 900px) { .home-grid .status-col { grid-column: span 12; } }
+
+/* ============================================================
+   floating dock + liquid glass (appended override)
+   ============================================================ */
+.navbar, .mobile-menu { display: none !important; }
+body .main { padding-top: 22px; }
+@media (min-width: 900px) { body .main { padding-top: 34px; } }
+body { padding-bottom: 92px; }
+
+.dock {
+  position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 60;
+  padding: 6px; border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,.55), rgba(255,255,255,.26));
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255,255,255,.65);
+  box-shadow: 0 12px 34px rgba(15,23,42,.18), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(255,255,255,.25);
+  animation: dockIn .5s cubic-bezier(.2,.9,.2,1) both;
+}
+@keyframes dockIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+[data-theme="dark"] .dock {
+  background: linear-gradient(135deg, rgba(30,41,59,.75), rgba(15,23,42,.55));
+  border-color: rgba(255,255,255,.14);
+  box-shadow: 0 12px 34px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.dock { max-width: calc(100vw - 24px); }
+.dock-inner { display: flex; align-items: center; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+.dock-inner::-webkit-scrollbar { display: none; }
+.dock-item {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  width: 62px; padding: 8px 4px 6px; border-radius: 999px; color: var(--text-2);
+  font-size: .62rem; font-weight: 600; text-decoration: none; background: transparent; border: none; cursor: pointer;
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), color .2s, background .25s;
+}
+.dock-item svg { width: 19px; height: 19px; transition: transform .25s, filter .25s; }
+.dock-item:hover { color: var(--text-1); transform: translateY(-3px) scale(1.06); background: rgba(255,255,255,.22); }
+[data-theme="dark"] .dock-item:hover { background: rgba(255,255,255,.08); }
+.dock-item:hover svg {
+  filter: drop-shadow(1.4px 0 0 rgba(255,60,120,.8)) drop-shadow(-1.4px 0 0 rgba(60,200,255,.8));
+}
+.dock-item.active { color: var(--primary); background: rgba(255,255,255,.34); }
+[data-theme="dark"] .dock-item.active { background: rgba(255,255,255,.1); }
+.dock-item.active::after {
+  content: ""; position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; background: var(--primary);
+}
+@media (max-width: 480px) { .dock { max-width: calc(100vw - 16px); } .dock-item { width: 46px; font-size: .56rem; padding: 7px 2px 5px; } .dock-item svg { width: 16px; height: 16px; } }
+
+/* liquid glass surfaces */
+.glass-card {
+  background: linear-gradient(135deg, rgba(255,255,255,.62), rgba(255,255,255,.3));
+  -webkit-backdrop-filter: blur(22px) saturate(175%);
+  backdrop-filter: blur(22px) saturate(175%);
+  border: 1px solid rgba(255,255,255,.66);
+  box-shadow: 0 10px 32px rgba(15,23,42,.12), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(255,255,255,.22);
+}
+[data-theme="dark"] .glass-card {
+  background: linear-gradient(135deg, rgba(30,41,59,.72), rgba(15,23,42,.52));
+  border-color: rgba(255,255,255,.14);
+  box-shadow: 0 10px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
+}
+.glass-button, .glass-input { -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); }

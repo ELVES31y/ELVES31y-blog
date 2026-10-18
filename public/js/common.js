@@ -1,4 +1,4 @@
-﻿/* ============================================================
+/* ============================================================
    common.js — 全站共用：导航栏、页脚、主题切换、小工具
    每个页面在 <head> 里引入本文件，并在 body 放好
    <div id="navbar"></div> 和 <div id="site-footer"></div>
@@ -147,32 +147,18 @@ function renderNavbar() {
   if (!mount) return;
   const theme = document.documentElement.getAttribute("data-theme");
   const links = NAV.map((n) =>
-    `<a href="${n.href}" class="${isActive(n) ? "active" : ""}">${ICONS[n.icon]}<span>${n.label}</span></a>`
+    `<a href="${n.href}" class="dock-item ${isActive(n) ? "active" : ""}" title="${n.label}">${ICONS[n.icon]}<span>${n.label}</span></a>`
   ).join("");
 
   mount.innerHTML = `
-    <nav class="navbar">
-      <div class="navbar-inner">
-        <a class="brand" href="index.html"><span>${esc(SITE.name.split("的")[0])}</span><span class="accent">の</span><span>小屋</span></a>
-        <div class="nav-links">${links}</div>
-        <div class="nav-actions">
-          <button class="icon-btn" id="theme-toggle" title="切换主题">${theme === "dark" ? ICONS.sun : ICONS.moon}</button>
-          <button class="icon-btn hamburger" id="menu-toggle" title="菜单">${ICONS.menu}</button>
-        </div>
+    <nav class="dock" aria-label="站点导航">
+      <div class="dock-inner">
+        ${links}
+        <button class="dock-item dock-theme" id="theme-toggle" title="切换主题">${theme === "dark" ? ICONS.sun : ICONS.moon}<span>主题</span></button>
       </div>
-    </nav>
-    <div class="mobile-menu" id="mobile-menu">
-      ${NAV.map((n) => `<a href="${n.href}" class="${isActive(n) ? "active" : ""}">${ICONS[n.icon]}<span>${n.label}</span></a>`).join("")}
-    </div>`;
+    </nav>`;
 
   document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
-  const mm = document.getElementById("mobile-menu");
-  document.getElementById("menu-toggle").addEventListener("click", () => {
-    mm.classList.toggle("open");
-    document.getElementById("menu-toggle").innerHTML = mm.classList.contains("open") ? ICONS.close : ICONS.menu;
-  });
-  // 点击菜单项后收起
-  mm.querySelectorAll("a").forEach((a) => a.addEventListener("click", () => mm.classList.remove("open")));
 }
 
 function renderFooter() {
