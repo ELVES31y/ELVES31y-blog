@@ -1,9 +1,8 @@
-﻿/* ============================================================
+/* ============================================================
    dock.js — 底部 dock 交互
-   高光与滑块不同时出现：
-   - 静止：当前页图标+文字带高光，滑块隐藏
-   - 切页：滑块淡入并拉伸滑过去，到位后滑块淡出，同时高光淡入（自然衔接）
-   - 涟漪：悬浮时图标弹性放大、相邻被挤开
+   - 悬停：滑块跟着指针滑到最近图标上，涟漪放大同事发生
+   - 切页：滑块从上一页滑到当前页，之后让位给高光
+   - 滑块与高光永不同时出现
    ============================================================ */
 (function () {
   "use strict";
@@ -13,22 +12,16 @@
   var items = Array.prototype.slice.call(dock.querySelectorAll(".dock-item"));
   if (!items.length) return;
 
-  var REACH = 96;
-  var BOOST = 0.24;
-  var LIFT = 6;
-  var PUSH = 4;
-  var DISP = 0.8;
+  var REACH = 96, BOOST = 0.24, LIFT = 6, PUSH = 4, DISP = 0.8;
 
-  // ---------- 原始位置缓存 ----------
+  // ---------- 原始位置 ----------
   var base = [];
-
   function clearVisual() {
     for (var i = 0; i < items.length; i++) {
       items[i].style.transform = "";
       items[i].style.removeProperty("--disp");
     }
   }
-
   function measure() {
     clearVisual();
     base = items.map(function (it) {
@@ -37,23 +30,23 @@
     });
   }
 
-  // ---------- 滑块（仅切页时短暂出现） ----------
+  // ---------- 滑块 ----------
   var ind = dock.querySelector(".dock-indicator");
   var dockInner = dock.querySelector(".dock-inner");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
-  var indTimer = 0;
-  var indHideTimer = 0;
+  var indTimer = 0, indHideTimer = 0, hoverIdx = -1;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
   function placeInd(el, smooth) {
-    if (!ind || !el) return;
+    if (!ind || !el || !dockInner) return;
     var ir = dockInner.getBoundingClientRect();
     var r = el.getBoundingClientRect();
     var w = Math.max(40, r.width - 2);
     var h = Math.max(36, r.height - 2);
     var newLeft = r.left - ir.left + (r.width - w) / 2;
     var oldLeft = parseFloat(ind.style.left || "0") || 0;
+
     ind.style.width = w + "px";
     ind.style.height = h + "px";
 
@@ -69,8 +62,8 @@
 
     var dx = newLeft - oldLeft;
     var dist = Math.abs(dx);
-    var sx = 1 + Math.min(0.55, dist / 240);
-    var sy = 1 - Math.min(0.18, dist / 800);
+    var sx = 1 + Math.min(0.45, dist / 320);
+    var sy = 1 - Math.min(0.14, dist / 1100);
 
     ind.style.transformOrigin = dx >= 0 ? "left center" : "right center";
     ind.style.transform = "translateY(-50%) scaleX(" + sx.toFixed(3) + ") scaleY(" + sy.toFixed(3) + ")";
@@ -80,9 +73,24 @@
     indTimer = setTimeout(function () {
       ind.style.transformOrigin = "center center";
       ind.style.transform = restTransform();
-    }, 560);
+    }, 420);
   }
 
+  function showSlider() {
+    ind.classList.add("is-show");
+    dock.classList.add("is-sliding");
+    clearTimeout(indHideTimer);
+  }
+
+  function hideSliderSoon(ms) {
+    clearTimeout(indHideTimer);
+    indHideTimer = setTimeout(function () {
+      ind.classList.remove("is-show");
+      dock.classList.remove("is-sliding");
+    }, ms);
+  }
+
+  // ---------- 切页入场 ----------
   var curIdx = items.indexOf(activeEl);
   var prevIdx = -1;
   try { prevIdx = parseInt(localStorage.getItem("dock_prev") || "-1", 10); } catch (e) { prevIdx = -1; }
@@ -91,22 +99,15 @@
   measure();
 
   if (prevIdx >= 0 && prevIdx !== curIdx && items[prevIdx]) {
-    // 切页：滑块先站在上一页，滑到当前页后淡出，高光同时淡入
     placeInd(items[prevIdx], false);
-    ind.classList.add("is-show");
-    dock.classList.add("is-sliding");
+    showSlider();
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         placeInd(activeEl, true);
-        clearTimeout(indHideTimer);
-        indHideTimer = setTimeout(function () {
-          ind.classList.remove("is-show");
-          dock.classList.remove("is-sliding");
-        }, 950);
+        hideSliderSoon(950);
       });
     });
   } else {
-    // 首次进入 / 同页刷新：只显示高光，不出现滑块
     placeInd(activeEl, false);
   }
 
@@ -115,7 +116,16 @@
     placeInd(dock.querySelector(".dock-item.active") || items[0], false);
   });
 
-  // ---------- 涟漪 ----------
+  // ---------- 涟漪 + 悬停跟随 ----------
+  function nearestIdx(clientX) {
+    var best = -1, bestD = 1e9;
+    for (var i = 0; i < base.length; i++) {
+      var d = Math.abs(base[i].cx - clientX);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    return best;
+  }
+
   function applyRipple(clientX) {
     var r = dock.getBoundingClientRect();
     dock.style.setProperty("--gx", (clientX - r.left) + "px");
@@ -135,7 +145,21 @@
         "translate(" + push.toFixed(1) + "px," + (-lift).toFixed(1) + "px) scale(" + scale.toFixed(3) + ")";
       it.style.setProperty("--disp", (t * DISP).toFixed(2));
     }
+
+    var idx = nearestIdx(clientX);
+    if (idx >= 0 && idx !== hoverIdx) {
+      hoverIdx = idx;
+      showSlider();
+      placeInd(items[idx], true);
+    }
   }
+
+  function onMove(e) { applyRipple(e.clientX); }
+
+  dock.addEventListener("mousemove", onMove, { passive: true });
+  dock.addEventListener("touchmove", function (e) {
+    if (e.touches && e.touches[0]) applyRipple(e.touches[0].clientX);
+  }, { passive: true });
 
   function resetRipple() {
     for (var i = 0; i < items.length; i++) {
@@ -145,14 +169,19 @@
     dock.style.setProperty("--glow", "0");
   }
 
-  dock.addEventListener("mousemove", function (e) { applyRipple(e.clientX); }, { passive: true });
-  dock.addEventListener("touchmove", function (e) {
-    if (e.touches && e.touches[0]) applyRipple(e.touches[0].clientX);
-  }, { passive: true });
-  dock.addEventListener("mouseleave", resetRipple);
-  dock.addEventListener("touchend", function () { setTimeout(resetRipple, 260); });
+  function leaveDock() {
+    resetRipple();
+    if (hoverIdx >= 0) {
+      hoverIdx = -1;
+      placeInd(activeEl, true);
+      hideSliderSoon(700);
+    }
+  }
 
-  // ---------- 滚动时玻璃透明度 ----------
+  dock.addEventListener("mouseleave", leaveDock);
+  dock.addEventListener("touchend", function () { setTimeout(leaveDock, 300); });
+
+  // ---------- 滚动：玻璃透明度 ----------
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
     dock.style.setProperty("--fade", Math.min(1, y / 420).toFixed(2));
@@ -161,9 +190,7 @@
   // ---------- 自动隐藏 ----------
   var IDLE_MS = 3000;
   var lastY = window.scrollY || 0;
-  var idleTimer = 0;
-  var lastReset = 0;
-  var overDock = false;
+  var idleTimer = 0, lastReset = 0, overDock = false;
 
   function hide() { dock.classList.add("is-hidden"); }
   function show() { dock.classList.remove("is-hidden"); }

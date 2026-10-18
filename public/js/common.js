@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dock") && !window.__dockLoaded) {
     window.__dockLoaded = true;
     const dk = document.createElement("script");
-    dk.src = "/js/dock.js?v=13";
+    dk.src = "/js/dock.js?v=14";
     document.body.appendChild(dk);
   }
 });
