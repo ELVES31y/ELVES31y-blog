@@ -15,10 +15,8 @@ function normalizeUrl(u) {
   m = /^https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+\/(.+)$/i.exec(s);
   if (m) return "/" + m[1].replace(/^public\//i, "");
 
-  // 站内音频加版本号，强制浏览器丢掉旧的缓存文件
-  if (s.charAt(0) === "/" && s.indexOf("/music/") === 0 && s.indexOf("?") < 0) {
-    return s + "?v=2";
-  }
+  // 统一指向无空格的文件名（带空格的路径 + 查询串会让播放器解析失败）
+  if (/phonk\.mp3/i.test(s)) return "/music/xz-phonk.mp3";
 
   return s;
 }
