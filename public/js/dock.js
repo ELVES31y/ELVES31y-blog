@@ -1,7 +1,7 @@
 /* ============================================================
    dock.js — 底部 dock 交互（克制版）
-   放大只作用于图标本身（不改变按钮盒子），所以永远不会溢出胶囊；
-   色散/高光跟随指针；向下滚动自动隐藏。
+   放大只作用于图标本身，永远不溢出胶囊；
+   向下滚动或静止一段时间后自动隐藏，一有动作就出现。
    ============================================================ */
 (function () {
   "use strict";
@@ -42,20 +42,50 @@
 
   dock.addEventListener("mouseleave", reset);
 
-  // ---------- 自动隐藏 ----------
+  // ---------- 自动隐藏：向下滚动 / 静止 ----------
+  var IDLE_MS = 3000;
   var lastY = window.scrollY || 0;
+  var idleTimer = 0;
+  var lastReset = 0;
+  var overDock = false;
 
   function hide() { dock.classList.add("is-hidden"); }
   function show() { dock.classList.remove("is-hidden"); }
 
+  function restartIdle() {
+    var now = Date.now();
+    if (now - lastReset < 250) return;
+    lastReset = now;
+    clearTimeout(idleTimer);
+    if (overDock) return;
+    idleTimer = setTimeout(hide, IDLE_MS);
+  }
+
+  function wake() {
+    show();
+    restartIdle();
+  }
+
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
     if (y > 200 && y > lastY + 2) hide();
-    else if (y < lastY - 2 || y < 200) show();
+    else wake();
     lastY = y;
   }, { passive: true });
 
-  window.addEventListener("mousemove", function (e) {
-    if (e.clientY > window.innerHeight - 70) show();
-  }, { passive: true });
+  window.addEventListener("mousemove", wake, { passive: true });
+  window.addEventListener("touchstart", wake, { passive: true });
+  window.addEventListener("keydown", wake);
+
+  dock.addEventListener("mouseenter", function () {
+    overDock = true;
+    clearTimeout(idleTimer);
+    show();
+  });
+  dock.addEventListener("mouseleave", function () {
+    overDock = false;
+    restartIdle();
+  });
+
+  restartIdle();
 })();
