@@ -102,7 +102,7 @@
         indHideTimer = setTimeout(function () {
           ind.classList.remove("is-show");
           dock.classList.remove("is-sliding");
-        }, 660);
+        }, 950);
       });
     });
   } else {

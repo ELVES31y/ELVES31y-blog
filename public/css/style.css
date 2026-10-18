@@ -860,3 +860,15 @@ body { padding-bottom: 92px; }
 
 /* dock: keep animations above (canvas/cursor/overlay already higher) */
 .dock { z-index: 70; }
+
+/* slider needs contrast: it sits on a white glass dock */
+.dock-indicator {
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 6px 18px rgba(15,23,42,.18), inset 0 1px 0 rgba(255,255,255,.95), inset 0 -1px 0 rgba(255,255,255,.3);
+}
+[data-theme="dark"] .dock-indicator {
+  background: rgba(148,163,184,.35);
+  border-color: rgba(255,255,255,.35);
+  box-shadow: 0 6px 18px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35);
+}
