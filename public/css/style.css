@@ -990,3 +990,11 @@ a:focus-visible, button:focus-visible, [role="button"]:focus {
 .dock-item:focus, .dock-item:focus-visible, .ta-btn:focus, .ta-btn:focus-visible, .mini-btn:focus, .filter-tab:focus {
   outline: none;
 }
+
+/* top-right actions: perfect circles, stay fixed */
+.top-actions { position: fixed; top: 16px; right: 16px; z-index: 66; }
+.ta-btn { width: 44px; height: 44px; border-radius: 50%; }
+@media (max-width: 520px) {
+  .top-actions { top: 12px; right: 12px; }
+  .ta-btn { width: 40px; height: 40px; border-radius: 50%; }
+}
