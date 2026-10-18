@@ -200,4 +200,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-icon]").forEach((el) => {
     el.innerHTML = ICONS[el.dataset.icon] || "";
   });
+  // 交互动画层（点击粒子 / 鼠标拖尾 / 光标环 / 页面切换 / 阅读进度）
+  if (!document.getElementById("fx-canvas")) {
+    const fx = document.createElement("script");
+    fx.src = "/js/effects.js";
+    fx.async = true;
+    document.body.appendChild(fx);
+  }
 });
