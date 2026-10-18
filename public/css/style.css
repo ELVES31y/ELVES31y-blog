@@ -925,3 +925,29 @@ html body .fx-player { bottom: 112px; }
   body { padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
   html body .fx-player { bottom: calc(112px + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* top-right quick actions on home */
+.top-actions { position: fixed; top: 14px; right: 14px; z-index: 66; display: flex; gap: 8px; }
+.ta-btn {
+  width: 42px; height: 42px; display: flex; align-items: center; justify-content: center;
+  border-radius: 14px; color: var(--text-2); cursor: pointer;
+  background: linear-gradient(160deg, rgba(255,255,255,.86), rgba(255,255,255,.6));
+  -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%);
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 8px 22px rgba(15,23,42,.16), inset 0 1px 0 rgba(255,255,255,1);
+  transition: transform .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.ta-btn svg { width: 20px; height: 20px; }
+.ta-btn:hover { color: var(--primary); transform: translateY(-2px); box-shadow: 0 12px 26px rgba(15,23,42,.22), inset 0 1px 0 rgba(255,255,255,1); }
+[data-theme="dark"] .ta-btn {
+  background: linear-gradient(160deg, rgba(30,41,59,.92), rgba(15,23,42,.8));
+  border-color: rgba(255,255,255,.16);
+  color: var(--text-2);
+}
+body .main { padding-top: 66px; }
+@media (max-width: 520px) {
+  .top-actions { top: 10px; right: 10px; gap: 6px; }
+  .ta-btn { width: 38px; height: 38px; border-radius: 12px; }
+  .ta-btn svg { width: 18px; height: 18px; }
+  body .main { padding-top: 58px; }
+}

@@ -146,11 +146,17 @@ function isActive(nav) {
   });
 }
 
+function syncThemeButtons() {
+  const dark = document.documentElement.getAttribute("data-theme") === "dark";
+  document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
+    btn.innerHTML = ICONS[dark ? "sun" : "moon"];
+  });
+}
+
 function renderNavbar() {
   const mount = document.getElementById("navbar");
   if (!mount) return;
-  const theme = document.documentElement.getAttribute("data-theme");
-  const links = NAV.map((n) =>
+  const links = NAV.slice(0, 5).map((n) =>
     `<a href="${n.href}" class="dock-item ${isActive(n) ? "active" : ""}" title="${n.label}">${ICONS[n.icon]}<span>${n.label}</span></a>`
   ).join("");
 
@@ -159,11 +165,8 @@ function renderNavbar() {
       <div class="dock-inner">
         <span class="dock-indicator" aria-hidden="true"></span>
         ${links}
-        <button class="dock-item dock-theme" id="theme-toggle" title="切换主题">${theme === "dark" ? ICONS.sun : ICONS.moon}<span>主题</span></button>
       </div>
     </nav>`;
-
-  document.getElementById("theme-toggle").addEventListener("click", toggleTheme);
 }
 
 function renderFooter() {
@@ -191,6 +194,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("[data-icon]").forEach((el) => {
     el.innerHTML = ICONS[el.dataset.icon] || "";
   });
+  // 右上角主题按钮
+  syncThemeButtons();
+  document.querySelectorAll("[data-theme-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => { toggleTheme(); syncThemeButtons(); });
+  });
   // 交互动画层（点击粒子 / 鼠标拖尾 / 光标环 / 页面切换 / 阅读进度）
   if (!document.getElementById("fx-canvas")) {
     const fx = document.createElement("script");
@@ -202,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dock") && !window.__dockLoaded) {
     window.__dockLoaded = true;
     const dk = document.createElement("script");
-    dk.src = "/js/dock.js?v=16";
+    dk.src = "/js/dock.js?v=17";
     document.body.appendChild(dk);
   }
 });
