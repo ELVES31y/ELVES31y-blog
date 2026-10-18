@@ -6,9 +6,6 @@ function normalizeUrl(u) {
   if (!u) return u;
   const s = String(u).trim();
 
-  // 旧文件已替换成高质量 flac，D1 里仍是老名字时自动迁移
-  if (/XZ[ %20-]*PHONK\.mp3$/i.test(s)) return "/music/noevo-xz-phonk.flac";
-
   let m = /^https?:\/\/github\.com\/[^/]+\/[^/]+\/(?:blob|raw)\/[^/]+\/(.+)$/i.exec(s);
   if (m) return "/" + m[1].replace(/^public\//i, "");
 
