@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    dock.js — 底部 dock 交互
    高光与滑块不同时出现：
    - 静止：当前页图标+文字带高光，滑块隐藏
@@ -39,19 +39,23 @@
 
   // ---------- 滑块（仅切页时短暂出现） ----------
   var ind = dock.querySelector(".dock-indicator");
+  var dockInner = dock.querySelector(".dock-inner");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
   var indHideTimer = 0;
-  var SIZE = 80;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
   function placeInd(el, smooth) {
     if (!ind || !el) return;
-    var dr = dock.getBoundingClientRect();
+    var ir = dockInner.getBoundingClientRect();
     var r = el.getBoundingClientRect();
-    var newLeft = r.left - dr.left + r.width / 2 - SIZE / 2;
+    var w = Math.max(40, r.width - 2);
+    var h = Math.max(36, r.height - 2);
+    var newLeft = r.left - ir.left + (r.width - w) / 2;
     var oldLeft = parseFloat(ind.style.left || "0") || 0;
+    ind.style.width = w + "px";
+    ind.style.height = h + "px";
 
     if (!smooth) {
       ind.style.transition = "none";
