@@ -1,9 +1,9 @@
-﻿/* ============================================================
-   dock.js — 底部 dock 交互（涟漪形变版）
-   1) 玻璃滑块跟随当前页，切换页面时椭圆拉伸滑过去
-   2) 悬浮/触摸：被指到的图标弹性放大上浮，左右相邻图标被挤开（涟漪）
-   3) 弹簧过渡，可随时打断；离开后回弹
-   4) 滚动时玻璃轻微变透明
+/* ============================================================
+   dock.js — 底部 dock 交互
+   高光与滑块不同时出现：
+   - 静止：当前页图标+文字带高光，滑块隐藏
+   - 切页：滑块淡入并拉伸滑过去，到位后滑块淡出，同时高光淡入（自然衔接）
+   - 涟漪：悬浮时图标弹性放大、相邻被挤开
    ============================================================ */
 (function () {
   "use strict";
@@ -13,13 +13,13 @@
   var items = Array.prototype.slice.call(dock.querySelectorAll(".dock-item"));
   if (!items.length) return;
 
-  var REACH = 96;     // 涟漪影响半径
-  var BOOST = 0.24;   // 最大放大
-  var LIFT = 6;       // 最大上浮 px
-  var PUSH = 4;       // 相邻图标被挤开的位移 px
-  var DISP = 0.8;     // 色散 px
+  var REACH = 96;
+  var BOOST = 0.24;
+  var LIFT = 6;
+  var PUSH = 4;
+  var DISP = 0.8;
 
-  // ---------- 记录原始位置（避免 transform 反馈导致抖动） ----------
+  // ---------- 原始位置缓存 ----------
   var base = [];
 
   function clearVisual() {
@@ -37,10 +37,11 @@
     });
   }
 
-  // ---------- 玻璃滑块 ----------
+  // ---------- 滑块（仅切页时短暂出现） ----------
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
+  var indHideTimer = 0;
   var SIZE = 80;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
@@ -84,12 +85,24 @@
   try { localStorage.setItem("dock_prev", String(curIdx)); } catch (e) {}
 
   measure();
+
   if (prevIdx >= 0 && prevIdx !== curIdx && items[prevIdx]) {
+    // 切页：滑块先站在上一页，滑到当前页后淡出，高光同时淡入
     placeInd(items[prevIdx], false);
+    ind.classList.add("is-show");
+    dock.classList.add("is-sliding");
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () { placeInd(activeEl, true); });
+      requestAnimationFrame(function () {
+        placeInd(activeEl, true);
+        clearTimeout(indHideTimer);
+        indHideTimer = setTimeout(function () {
+          ind.classList.remove("is-show");
+          dock.classList.remove("is-sliding");
+        }, 660);
+      });
     });
   } else {
+    // 首次进入 / 同页刷新：只显示高光，不出现滑块
     placeInd(activeEl, false);
   }
 
@@ -98,7 +111,7 @@
     placeInd(dock.querySelector(".dock-item.active") || items[0], false);
   });
 
-  // ---------- 涟漪：放大 + 上浮 + 相邻挤开 ----------
+  // ---------- 涟漪 ----------
   function applyRipple(clientX) {
     var r = dock.getBoundingClientRect();
     dock.style.setProperty("--gx", (clientX - r.left) + "px");
@@ -135,7 +148,7 @@
   dock.addEventListener("mouseleave", resetRipple);
   dock.addEventListener("touchend", function () { setTimeout(resetRipple, 260); });
 
-  // ---------- 滚动时玻璃透明度变化 ----------
+  // ---------- 滚动时玻璃透明度 ----------
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
     dock.style.setProperty("--fade", Math.min(1, y / 420).toFixed(2));
