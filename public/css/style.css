@@ -98,9 +98,17 @@ body {
 
 /* 全站背景图位：/images/home-bg.png（所有页面统一；关于页横幅另用 about-bg.jpg）。
    图不在 / 加载失败时自动回落到底下的渐变，不会白屏。 */
-body {
-  background: url(/images/home-bg.png) center/cover no-repeat fixed, var(--bg-body);
-  animation: none;
+html { background: var(--bg-body) fixed; }
+body { background: transparent; }
+/* 背景高斯模糊层：图片铺在固定层上做 blur，正文内容不受影响 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -24px;
+  z-index: -1;
+  pointer-events: none;
+  background: url(/images/home-bg.png) center/cover no-repeat;
+  filter: blur(16px) saturate(1.12);
 }
 
 a { color: inherit; text-decoration: none; }

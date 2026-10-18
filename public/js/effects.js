@@ -31,6 +31,14 @@
     ".fx-portal i:nth-child(3){inset:18px;color:#a78bfa;animation-duration:.8s}",
     ".fx-portal b{position:absolute;left:50%;top:50%;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#38bdf8;animation:fxpulse 1.2s ease-in-out infinite}",
     ".fx-tip{color:rgba(255,255,255,.75);font-size:.82rem;text-align:center;max-width:280px;padding:0 16px;line-height:1.6}",
+    ".fx-player{position:fixed;right:14px;bottom:14px;z-index:9000;display:flex;align-items:center;gap:8px;padding:7px 12px 7px 8px;border-radius:999px;background:rgba(255,255,255,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.55);box-shadow:0 8px 24px rgba(0,0,0,.15);font-size:.78rem;color:#0f172a;transition:transform .25s,box-shadow .25s}",
+    ".fx-player:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(0,0,0,.2)}",
+    "[data-theme='dark'] .fx-player{background:rgba(15,23,42,.62);border-color:rgba(255,255,255,.12);color:#e2e8f0}",
+    ".fx-p-btn{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;line-height:1;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 2px 8px rgba(99,102,241,.4)}",
+    ".fx-p-meta{display:flex;flex-direction:column;line-height:1.25;max-width:132px;overflow:hidden}",
+    ".fx-p-meta b{font-weight:600;font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+    ".fx-p-meta span{opacity:.6;font-size:.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}",
+    ".fx-p-more{opacity:.5;text-decoration:none;font-size:14px;color:inherit}",
     "@keyframes fxspin{to{transform:rotate(360deg)}}",
     "@keyframes fxpulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.6);opacity:.5}}",
     "@media (max-width:768px){#fx-cursor-dot,#fx-cursor-ring{display:none}}"
@@ -235,4 +243,55 @@
     window.addEventListener("resize", updateBar);
     updateBar();
   }
+
+  // ---------------- 悬浮音乐播放器（自动播放 / 小音量） ----------------
+  (function initPlayer() {
+    var audio = new Audio();
+    audio.loop = true;
+    audio.volume = 0.18;
+    audio.preload = "auto";
+
+    var wrap = document.createElement("div");
+    wrap.id = "fx-player";
+    wrap.className = "fx-player";
+    wrap.innerHTML =
+      '<button class="fx-p-btn" type="button" aria-label="播放/暂停">\u25B6</button>' +
+      '<div class="fx-p-meta"><b>音乐</b><span>加载中…</span></div>' +
+      '<a class="fx-p-more" href="/music.html" title="音乐页">\u266A</a>';
+    document.body.appendChild(wrap);
+
+    var btn = wrap.querySelector(".fx-p-btn");
+    var tEl = wrap.querySelector(".fx-p-meta b");
+    var aEl = wrap.querySelector(".fx-p-meta span");
+
+    btn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (audio.paused) { audio.play().catch(function () {}); }
+      else { audio.pause(); }
+    });
+    audio.addEventListener("play", function () { btn.textContent = "\u275A\u275A"; });
+    audio.addEventListener("pause", function () { btn.textContent = "\u25B6"; });
+
+    fetch("/api/music")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var items = (d && d.items) || [];
+        if (!items.length) { wrap.style.display = "none"; return; }
+        var t = items[0];
+        audio.src = t.url;
+        tEl.textContent = t.name || "音乐";
+        aEl.textContent = t.artist || "";
+        var p = audio.play();
+        if (p && p.catch) {
+          p.catch(function () {
+            // 浏览器拦截自动播放 → 用户第一次交互时再开始
+            aEl.textContent = "点一下页面开始播放";
+            var once = function () { audio.play().catch(function () {}); };
+            document.addEventListener("click", once, { once: true });
+            document.addEventListener("keydown", once, { once: true });
+          });
+        }
+      })
+      .catch(function () { wrap.style.display = "none"; });
+  })();
 })();
