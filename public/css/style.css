@@ -364,7 +364,7 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 }
 
 /* 小文章卡（首页） */
-.mini-posts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.mini-posts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .mini-post {
   position: relative; display: block; border-radius: var(--radius-md); overflow: hidden; height: 90px;
 }
@@ -394,8 +394,8 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 .filter-tab .count { font-size: 0.75rem; opacity: 0.65; margin-left: 5px; }
 
 .post-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-@media (min-width: 640px) { .post-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (min-width: 1024px) { .post-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+@media (min-width: 640px) { .post-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .post-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
 
 .post-card {
   position: relative; display: block; border-radius: var(--radius-lg); overflow: hidden;
@@ -533,8 +533,8 @@ input, textarea, select { font-family: inherit; font-size: 1rem; }
 .moment-card .m-head .time { font-size: 0.7rem; color: var(--text-3); margin-left: auto; }
 .moment-card .mood { padding: 2px 10px; border-radius: 999px; font-size: 0.7rem; background: rgba(148,163,184,0.15); color: var(--text-2); }
 .moment-card .m-content { font-size: 0.92rem; color: var(--text-2); white-space: pre-wrap; }
-.moment-card .m-images { display: grid; gap: 8px; margin: 12px 0; grid-template-columns: repeat(2, 1fr); }
-.moment-card .m-images.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.moment-card .m-images { display: grid; gap: 8px; margin: 12px 0; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.moment-card .m-images.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .moment-card .m-images img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; cursor: zoom-in; transition: transform 0.3s ease; }
 .moment-card .m-images img:hover { transform: scale(1.03); }
 .moment-card .m-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 12px; border-top: 1px solid var(--divider); }
@@ -680,7 +680,7 @@ textarea.glass-input { min-height: 120px; resize: vertical; }
 
 /* 响应式：桌面端首页 bento 布局 */
 @media (min-width: 900px) {
-  .home-grid { grid-template-columns: repeat(12, 1fr); gap: 20px; }
+  .home-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
   .home-grid .profile-col { grid-column: span 8; }
   .home-grid .music-col { grid-column: span 4; }
   .home-grid .photo-col { grid-column: span 4; }
@@ -1002,3 +1002,13 @@ a:focus-visible, button:focus-visible, [role="button"]:focus {
 /* top-right actions fade out while scrolling */
 .top-actions { transition: opacity .28s ease, transform .28s ease; }
 .top-actions.is-dim { opacity: 0; transform: translateY(-10px); pointer-events: none; }
+
+/* article area: hard constraints so nothing pokes out */
+#latest-posts, #latest-posts > * { min-width: 0; max-width: 100%; }
+.hero-post, .hero-post img, .hero-post .fallback { max-width: 100%; }
+.hero-post { width: 100%; box-sizing: border-box; }
+.mini-posts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) {
+  .mini-posts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero-post { min-height: 170px; }
+}
