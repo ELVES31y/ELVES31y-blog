@@ -1,22 +1,19 @@
 import { json, getSetting } from "../_lib.js";
 
-// 有人会把 GitHub 网页链接（/blob/）当成音频地址填进来，
-// 浏览器拿到的是 HTML 页面而不是音频。这里统一转成站内路径。
+// 把历史遗留的各种写法统一转成当前实际存在的站内路径
 function normalizeUrl(u) {
   if (!u) return u;
   const s = String(u).trim();
 
-  // 旧文件已替换成高质量 flac，D1 里仍是老名字时自动迁移
-  if (/XZ[ %20-]*PHONK\.mp3$/i.test(s)) return "/music/noevo-xz-phonk.flac";
+  // 必须放在最前面：这条要在 github 规则之前执行，否则会被提前 return 掉
+  // 无论 D1 里存的是 blob 链接、旧 mp3、还是已删除的 flac，都指向现在这个文件
+  if (/phonk/i.test(s)) return "/music/xz-phonk.mp3";
 
   let m = /^https?:\/\/github\.com\/[^/]+\/[^/]+\/(?:blob|raw)\/[^/]+\/(.+)$/i.exec(s);
   if (m) return "/" + m[1].replace(/^public\//i, "");
 
   m = /^https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+\/(.+)$/i.exec(s);
   if (m) return "/" + m[1].replace(/^public\//i, "");
-
-  // 统一指向无空格的文件名（带空格的路径 + 查询串会让播放器解析失败）
-  if (/phonk\.mp3/i.test(s)) return "/music/xz-phonk.mp3";
 
   return s;
 }
