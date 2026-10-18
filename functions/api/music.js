@@ -1,5 +1,20 @@
 import { json, getSetting } from "../_lib.js";
 
+// 有人会把 GitHub 网页链接（/blob/）当成音频地址填进来，
+// 浏览器拿到的是 HTML 页面而不是音频。这里统一转成站内路径。
+function normalizeUrl(u) {
+  if (!u) return u;
+  const s = String(u).trim();
+
+  let m = /^https?:\/\/github\.com\/[^/]+\/[^/]+\/(?:blob|raw)\/[^/]+\/(.+)$/i.exec(s);
+  if (m) return "/" + m[1].replace(/^public\//i, "");
+
+  m = /^https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+\/(.+)$/i.exec(s);
+  if (m) return "/" + m[1].replace(/^public\//i, "");
+
+  return s;
+}
+
 // GET /api/music  返回 APlayer 需要的歌单 + 是否自动播放
 export async function onRequestGet({ env }) {
   const rows = await env.DB.prepare(
@@ -10,7 +25,7 @@ export async function onRequestGet({ env }) {
   const items = rows.results.map((t) => ({
     name: t.title,
     artist: t.artist || "未知",
-    url: t.url,
+    url: normalizeUrl(t.url),
     cover: t.cover || "",
     lrc: t.lrc || "",
   }));
