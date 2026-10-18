@@ -16,6 +16,13 @@ async function load() {
   document.getElementById("stat-moments").textContent = moments.total;
   document.getElementById("stat-photos").textContent = photos.total;
 
+  const stPosts = document.getElementById("st-posts");
+  const stMoments = document.getElementById("st-moments");
+  const stPhotos = document.getElementById("st-photos");
+  if (stPosts) stPosts.textContent = posts.total;
+  if (stMoments) stMoments.textContent = moments.total;
+  if (stPhotos) stPhotos.textContent = photos.total;
+
   renderLatestPosts(posts.items);
   renderMoments(moments.items);
   renderPhotoPreview(photos.items);
@@ -74,3 +81,36 @@ function renderMoments(items) {
 }
 
 document.addEventListener("DOMContentLoaded", load);
+
+// ---------- 站点状态：运行时长 / 实时时钟 / 时区 ----------
+// 站点上线时间（改这里即可改"运行时长"的起点）
+const SITE_START = new Date("2025-06-01T18:00:00+08:00").getTime();
+
+function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+
+function tickStatus() {
+  const up = document.getElementById("st-uptime");
+  if (!up) return;
+  const total = Math.max(0, Math.floor((Date.now() - SITE_START) / 1000));
+  const d = Math.floor(total / 86400);
+  const h = Math.floor((total % 86400) / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  up.textContent = d + " 天 " + pad2(h) + ":" + pad2(m) + ":" + pad2(s);
+
+  const clock = document.getElementById("st-clock");
+  if (clock) {
+    const now = new Date();
+    clock.textContent = pad2(now.getHours()) + ":" + pad2(now.getMinutes()) + ":" + pad2(now.getSeconds());
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const tz = document.getElementById("st-tz");
+  if (tz) {
+    try { tz.textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || "本地"; }
+    catch (e) { tz.textContent = "本地"; }
+  }
+  tickStatus();
+  setInterval(tickStatus, 1000);
+});
