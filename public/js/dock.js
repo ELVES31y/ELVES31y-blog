@@ -1,6 +1,6 @@
 /* ============================================================
    dock.js — 底部 dock 交互
-   - 玻璃滑块指示当前页，切换页面时从上一页位置平滑滑过来
+   - 玻璃滑块：静止时是圆形，滑动时沿运动方向拉伸成椭圆（流体形变）
    - 放大只作用于图标本身，不溢出胶囊
    - 向下滚动或静止 3 秒自动隐藏
    ============================================================ */
@@ -16,20 +16,27 @@
   var BOOST = 0.16;
   var DISP = 0.8;
 
-  // ---------- 玻璃滑块 ----------
+  // ---------- 玻璃滑块（圆形 ↔ 椭圆） ----------
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
+  var indTimer = 0;
+  var SIZE = 44; // 圆形直径，需与 CSS 中 .dock-indicator 的宽高一致
 
   function placeInd(el, smooth) {
     if (!ind || !el) return;
     var dr = dock.getBoundingClientRect();
     var r = el.getBoundingClientRect();
     if (!smooth) ind.style.transition = "none";
-    ind.style.width = (r.width + 10) + "px";
-    ind.style.left = (r.left - dr.left - 5) + "px";
+    ind.style.left = (r.left - dr.left + r.width / 2 - SIZE / 2) + "px";
     if (!smooth) {
       void ind.offsetWidth;
       ind.style.transition = "";
+    }
+    if (smooth) {
+      // 滑动过程中像水滴被拉长，停下后回弹成圆
+      ind.classList.add("is-moving");
+      clearTimeout(indTimer);
+      indTimer = setTimeout(function () { ind.classList.remove("is-moving"); }, 620);
     }
   }
 
@@ -39,9 +46,9 @@
   try { localStorage.setItem("dock_prev", String(curIdx)); } catch (e) {}
 
   if (prevIdx >= 0 && prevIdx !== curIdx && items[prevIdx]) {
-    placeInd(items[prevIdx], false);          // 先站到上一页的位置
-    requestAnimationFrame(function () {       // 下一帧滑到当前页
-      requestAnimationFrame(function () { placeInd(activeEl, true); });
+    placeInd(items[prevIdx], false);          // 先站到上一页的位置（圆形）
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { placeInd(activeEl, true); }); // 拉长着滑过去
     });
   } else {
     placeInd(activeEl, false);

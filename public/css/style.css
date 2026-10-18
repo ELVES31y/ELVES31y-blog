@@ -812,3 +812,8 @@ body { padding-bottom: 92px; }
 .dock-item { position: relative; z-index: 2; }
 .dock-item.active { background: transparent; }
 .dock-item.active::after { display: none; }
+
+/* slider: circle at rest, stretches into an ellipse while sliding */
+.dock-indicator { width: 44px; height: 44px; border-radius: 50%; top: 50%; transform: translateY(-50%); transition: left .5s cubic-bezier(.34,1.32,.64,1), transform .55s cubic-bezier(.34,1.32,.64,1), background .3s; }
+.dock-indicator.is-moving { transform: translateY(-50%) scaleX(1.62) scaleY(0.86); }
+.dock-indicator::after { content: ""; position: absolute; inset: 4px; border-radius: inherit; background: radial-gradient(60% 50% at 30% 20%, rgba(255,255,255,.85), rgba(255,255,255,0) 70%); pointer-events: none; }
