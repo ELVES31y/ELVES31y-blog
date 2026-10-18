@@ -288,6 +288,11 @@
     var bar = wrap.querySelector(".fx-p-bar i");
     var cover = wrap.querySelector(".fx-p-cover");
 
+    // 切换到后台/其他 App 时立即暂停，不在后台继续播放
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden && !audio.paused) audio.pause();
+    });
+
     function setPlaying(on) { btn.textContent = on ? "\u275A\u275A" : "\u25B6"; }
 
     btn.addEventListener("click", function (e) {
