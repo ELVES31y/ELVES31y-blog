@@ -1,8 +1,9 @@
-﻿/* ============================================================
-   dock.js — 底部 dock 交互
-   - 玻璃滑块：静止是椭圆，滑动时按速度和方向拉伸（拖尾形变）
-   - 放大只作用于图标本身，不溢出胶囊
-   - 向下滚动或静止 3 秒自动隐藏
+/* ============================================================
+   dock.js — 底部 dock 交互（涟漪形变版）
+   1) 玻璃滑块跟随当前页，切换页面时椭圆拉伸滑过去
+   2) 悬浮/触摸：被指到的图标弹性放大上浮，左右相邻图标被挤开（涟漪）
+   3) 弹簧过渡，可随时打断；离开后回弹
+   4) 滚动时玻璃轻微变透明
    ============================================================ */
 (function () {
   "use strict";
@@ -12,18 +13,35 @@
   var items = Array.prototype.slice.call(dock.querySelectorAll(".dock-item"));
   if (!items.length) return;
 
-  // 给每个图标分配一种 hover 动画
-  for (var j = 0; j < items.length; j++) items[j].setAttribute("data-fx", String(j % 4));
+  var REACH = 96;     // 涟漪影响半径
+  var BOOST = 0.24;   // 最大放大
+  var LIFT = 6;       // 最大上浮 px
+  var PUSH = 4;       // 相邻图标被挤开的位移 px
+  var DISP = 0.8;     // 色散 px
 
-  var REACH = 84;
-  var BOOST = 0.16;
-  var DISP = 0.8;
+  // ---------- 记录原始位置（避免 transform 反馈导致抖动） ----------
+  var base = [];
 
-  // ---------- 玻璃滑块：静止椭圆，滑动时按方向拉长 ----------
+  function clearVisual() {
+    for (var i = 0; i < items.length; i++) {
+      items[i].style.transform = "";
+      items[i].style.removeProperty("--disp");
+    }
+  }
+
+  function measure() {
+    clearVisual();
+    base = items.map(function (it) {
+      var b = it.getBoundingClientRect();
+      return { cx: b.left + b.width / 2 };
+    });
+  }
+
+  // ---------- 玻璃滑块 ----------
   var ind = dock.querySelector(".dock-indicator");
   var activeEl = dock.querySelector(".dock-item.active") || items[0];
   var indTimer = 0;
-  var SIZE = 76; // 与 CSS 中 .dock-indicator 的宽度一致
+  var SIZE = 76;
 
   function restTransform() { return "translateY(-50%) scaleX(1) scaleY(1)"; }
 
@@ -46,7 +64,6 @@
 
     var dx = newLeft - oldLeft;
     var dist = Math.abs(dx);
-    // 位移越大拉得越长；拉伸方向永远朝向运动方向（尾巴拖在后面）
     var sx = 1 + Math.min(0.55, dist / 240);
     var sy = 1 - Math.min(0.18, dist / 800);
 
@@ -66,46 +83,63 @@
   try { prevIdx = parseInt(localStorage.getItem("dock_prev") || "-1", 10); } catch (e) { prevIdx = -1; }
   try { localStorage.setItem("dock_prev", String(curIdx)); } catch (e) {}
 
+  measure();
   if (prevIdx >= 0 && prevIdx !== curIdx && items[prevIdx]) {
-    placeInd(items[prevIdx], false);          // 先站到上一页位置
+    placeInd(items[prevIdx], false);
     requestAnimationFrame(function () {
-      requestAnimationFrame(function () { placeInd(activeEl, true); }); // 拉长着滑过去
+      requestAnimationFrame(function () { placeInd(activeEl, true); });
     });
   } else {
     placeInd(activeEl, false);
   }
 
   window.addEventListener("resize", function () {
+    measure();
     placeInd(dock.querySelector(".dock-item.active") || items[0], false);
   });
 
-  // ---------- 放大 + 色散 ----------
-  function reset() {
+  // ---------- 涟漪：放大 + 上浮 + 相邻挤开 ----------
+  function applyRipple(clientX) {
+    var r = dock.getBoundingClientRect();
+    dock.style.setProperty("--gx", (clientX - r.left) + "px");
+    dock.style.setProperty("--glow", "1");
+
     for (var i = 0; i < items.length; i++) {
-      items[i].style.removeProperty("--boost");
+      var it = items[i];
+      var cx = base[i] ? base[i].cx : 0;
+      var dx = cx - clientX;
+      var d = Math.abs(dx);
+      var t = Math.max(0, 1 - d / REACH);
+      t = t * t;
+      var scale = 1 + t * BOOST;
+      var lift = t * LIFT;
+      var push = (dx === 0 ? 0 : (dx > 0 ? 1 : -1)) * t * PUSH;
+      it.style.transform =
+        "translate(" + push.toFixed(1) + "px," + (-lift).toFixed(1) + "px) scale(" + scale.toFixed(3) + ")";
+      it.style.setProperty("--disp", (t * DISP).toFixed(2));
+    }
+  }
+
+  function resetRipple() {
+    for (var i = 0; i < items.length; i++) {
+      items[i].style.transform = "";
       items[i].style.removeProperty("--disp");
     }
     dock.style.setProperty("--glow", "0");
   }
 
-  dock.addEventListener("mousemove", function (e) {
-    var r = dock.getBoundingClientRect();
-    dock.style.setProperty("--gx", (e.clientX - r.left) + "px");
-    dock.style.setProperty("--glow", "1");
-
-    for (var i = 0; i < items.length; i++) {
-      var it = items[i];
-      var b = it.getBoundingClientRect();
-      var cx = b.left + b.width / 2;
-      var d = Math.abs(e.clientX - cx);
-      var t = Math.max(0, 1 - d / REACH);
-      t = t * t;
-      it.style.setProperty("--boost", (t * BOOST).toFixed(3));
-      it.style.setProperty("--disp", (t * DISP).toFixed(2));
-    }
+  dock.addEventListener("mousemove", function (e) { applyRipple(e.clientX); }, { passive: true });
+  dock.addEventListener("touchmove", function (e) {
+    if (e.touches && e.touches[0]) applyRipple(e.touches[0].clientX);
   }, { passive: true });
+  dock.addEventListener("mouseleave", resetRipple);
+  dock.addEventListener("touchend", function () { setTimeout(resetRipple, 260); });
 
-  dock.addEventListener("mouseleave", reset);
+  // ---------- 滚动时玻璃透明度变化 ----------
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY || 0;
+    dock.style.setProperty("--fade", Math.min(1, y / 420).toFixed(2));
+  }, { passive: true });
 
   // ---------- 自动隐藏 ----------
   var IDLE_MS = 3000;

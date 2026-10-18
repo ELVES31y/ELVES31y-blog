@@ -133,13 +133,17 @@ const NAV = [
 ];
 
 function currentPage() {
-  const seg = location.pathname.split("/").pop() || "index.html";
-  return seg === "" ? "index.html" : seg;
+  const seg = location.pathname.split("/").pop() || "";
+  return seg.replace(/\.html$/, "") || "index";
 }
 
 function isActive(nav) {
   const page = currentPage();
-  return nav.match.some((m) => (m === "" ? page === "index.html" : page.startsWith(m) || page === m));
+  return nav.match.some((m) => {
+    const key = m.replace(/\.html$/, "");
+    if (!key) return page === "index";
+    return page === key || page.startsWith(key);
+  });
 }
 
 function renderNavbar() {
@@ -198,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.querySelector(".dock") && !window.__dockLoaded) {
     window.__dockLoaded = true;
     const dk = document.createElement("script");
-    dk.src = "/js/dock.js?v=7";
+    dk.src = "/js/dock.js?v=8";
     document.body.appendChild(dk);
   }
 });
