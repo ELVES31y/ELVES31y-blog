@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    dock.js — 底部 dock 交互
    - 悬停：滑块跟着指针滑到最近图标上，涟漪放大同事发生
    - 切页：滑块从上一页滑到当前页，之后让位给高光
@@ -42,9 +42,9 @@
     if (!ind || !el || !dockInner) return;
     var ir = dockInner.getBoundingClientRect();
     var r = el.getBoundingClientRect();
-    var w = Math.max(40, r.width - 2);
-    var h = Math.max(36, r.height - 2);
-    var newLeft = r.left - ir.left + (r.width - w) / 2;
+    var w = r.width + 6;
+    var h = r.height + 4;
+    var newLeft = r.left - ir.left - 3;
     var oldLeft = parseFloat(ind.style.left || "0") || 0;
 
     ind.style.width = w + "px";
@@ -185,7 +185,12 @@
   window.addEventListener("scroll", function () {
     var y = window.scrollY || 0;
     dock.style.setProperty("--fade", Math.min(1, y / 420).toFixed(2));
+    resetRipple();
   }, { passive: true });
+
+  // 指针离开窗口或页面时也复位，避免图标停在放大状态
+  document.addEventListener("mouseleave", resetRipple);
+  window.addEventListener("blur", resetRipple);
 
   // ---------- 自动隐藏 ----------
   var IDLE_MS = 3000;
