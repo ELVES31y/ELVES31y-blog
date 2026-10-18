@@ -193,4 +193,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fx.async = true;
     document.body.appendChild(fx);
   }
+  // 底部 dock 交互（放大镜 / 色散 / 拖动）
+  if (document.querySelector(".dock") && !window.__dockLoaded) {
+    window.__dockLoaded = true;
+    const dk = document.createElement("script");
+    dk.src = "/js/dock.js?v=1";
+    document.body.appendChild(dk);
+  }
 });

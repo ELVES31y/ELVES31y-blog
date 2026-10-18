@@ -729,7 +729,7 @@ body { padding-bottom: 92px; }
   backdrop-filter: blur(22px) saturate(180%);
   border: 1px solid rgba(255,255,255,.65);
   box-shadow: 0 12px 34px rgba(15,23,42,.18), inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(255,255,255,.25);
-  animation: dockIn .5s cubic-bezier(.2,.9,.2,1) both;
+  animation: dockIn .5s cubic-bezier(.2,.9,.2,1) backwards;
 }
 @keyframes dockIn { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 [data-theme="dark"] .dock {
@@ -749,9 +749,7 @@ body { padding-bottom: 92px; }
 .dock-item svg { width: 19px; height: 19px; transition: transform .25s, filter .25s; }
 .dock-item:hover { color: var(--text-1); transform: translateY(-3px) scale(1.06); background: rgba(255,255,255,.22); }
 [data-theme="dark"] .dock-item:hover { background: rgba(255,255,255,.08); }
-.dock-item:hover svg {
-  filter: drop-shadow(1.4px 0 0 rgba(255,60,120,.8)) drop-shadow(-1.4px 0 0 rgba(60,200,255,.8));
-}
+.dock-item:hover svg { animation: dockPop .5s cubic-bezier(.2,.9,.2,1); }
 .dock-item.active { color: var(--primary); background: rgba(255,255,255,.34); }
 [data-theme="dark"] .dock-item.active { background: rgba(255,255,255,.1); }
 .dock-item.active::after {
@@ -774,3 +772,19 @@ body { padding-bottom: 92px; }
   box-shadow: 0 10px 32px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.16);
 }
 .glass-button, .glass-input { -webkit-backdrop-filter: blur(16px) saturate(160%); backdrop-filter: blur(16px) saturate(160%); }
+/* dock liquid interaction (JS driven) */
+.dock { --gx: 50%; --glow: 0; touch-action: none; }
+.dock::after {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  background: radial-gradient(72px 46px at var(--gx) 50%, rgba(255,255,255,.9), rgba(255,255,255,0) 70%);
+  opacity: calc(var(--glow, 0) * .6); transition: opacity .25s; mix-blend-mode: screen;
+}
+.dock-item svg {
+  filter: drop-shadow(calc(var(--disp, 0) * 1px) 0 rgba(255,60,120,.9)) drop-shadow(calc(var(--disp, 0) * -1px) 0 rgba(60,200,255,.9));
+}
+.dock-item span {
+  text-shadow: calc(var(--disp, 0) * 1px) 0 rgba(255,60,120,.75), calc(var(--disp, 0) * -1px) 0 rgba(60,200,255,.75);
+}
+@keyframes dockPop { 0% { transform: scale(1) rotate(0); } 45% { transform: scale(1.22) rotate(-7deg); } 100% { transform: scale(1) rotate(0); } }
+.dock-item.active svg { animation: dockBreathe 2.6s ease-in-out infinite; }
+@keyframes dockBreathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
