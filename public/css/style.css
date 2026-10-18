@@ -96,9 +96,9 @@ body {
   transition: background 0.5s ease, color 0.3s ease;
 }
 
-/* 首页背景图位：/images/home-bg.png（关于页横幅用的是 about-bg.jpg）。
+/* 全站背景图位：/images/home-bg.png（所有页面统一；关于页横幅另用 about-bg.jpg）。
    图不在 / 加载失败时自动回落到底下的渐变，不会白屏。 */
-body.page-home {
+body {
   background: url(/images/home-bg.png) center/cover no-repeat fixed, var(--bg-body);
   animation: none;
 }
