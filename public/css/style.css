@@ -978,3 +978,15 @@ html, body { overflow-x: clip; }
 .section-card, .glass-card, .container, .container-narrow, .container-xs { max-width: 100%; }
 .status-item { min-width: 0; }
 .status-item .v { word-break: break-word; }
+
+/* no blue tap highlight / focus box on click */
+* { -webkit-tap-highlight-color: transparent; }
+a, button, input, textarea, select, [role="button"] { -webkit-tap-highlight-color: transparent; }
+a:focus, a:active, button:focus, button:active,
+a:focus-visible, button:focus-visible, [role="button"]:focus {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.dock-item:focus, .dock-item:focus-visible, .ta-btn:focus, .ta-btn:focus-visible, .mini-btn:focus, .filter-tab:focus {
+  outline: none;
+}
